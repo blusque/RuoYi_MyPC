@@ -7,7 +7,6 @@ DROP TABLE IF EXISTS storage_check_detail;
 DROP TABLE IF EXISTS storage_record;
 
 
---TODO: 出入库单
 CREATE TABLE
     IF NOT EXISTS storage_outin (
         `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '出入库单编号',
@@ -23,9 +22,9 @@ CREATE TABLE
         `outin_id` BIGINT(20) NOT NULL COMMENT '出入库单编号',
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',
         `number` INT NOT NULL COMMENT '出入库数量',
-        PRIMARY KEY ('outin_id', 'material_id', 'number')
+        PRIMARY KEY (`outin_id`, `material_id`, `number`)
     ) COMMENT = '出入库单明细表';
---TODO: 移库单
+
 CREATE TABLE
     IF NOT EXISTS storage_move (
         `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '移库单编号',
@@ -33,6 +32,7 @@ CREATE TABLE
         `staff_id` BIGINT(20) NOT NULL COMMENT '操作员工编号',
         `from` INT(3) NOT NULL COMMENT '出库',
         `to` INT(3) NOT NULL COMMENT '入库', 
+        PRIMARY KEY (`id`)
     ) COMMENT = '移库单';
 
 CREATE TABLE
@@ -42,7 +42,7 @@ CREATE TABLE
         `number` INT NOT NULL COMMENT '移库数量',
         PRIMARY KEY (`move_id`, `material_id`)
     ) COMMENT = '移库单明细';
---TODO: 盘点单
+
 CREATE TABLE
     IF NOT EXISTS storage_check (
         `id` BIGINT(20) NOT NULL COMMENT '盘点单编号',
@@ -59,7 +59,7 @@ CREATE TABLE
         `number` INT NOT NULL COMMENT '盈亏数量',
         PRIMARY KEY (`check_id`, `material_id`)
     ) COMMENT = '盘点单明细';
---TODO: 库存表
+
 CREATE TABLE
     IF NOT EXISTS storage_record (
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',

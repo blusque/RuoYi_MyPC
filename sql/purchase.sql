@@ -53,5 +53,5 @@ CREATE TABLE
         `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',
         `number` INT NOT NULL COMMENT '物料数量',
-        PRIMARY KEY (`order_id`, `material_id`, `date`)
+        PRIMARY KEY (`order_id`, `material_id`)
    ) COMMENT = '采购订单退货明细表';

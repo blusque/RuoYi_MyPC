@@ -21,7 +21,7 @@ CREATE TABLE
     IF NOT EXISTS customer_address (
         `customer_id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '客户编号',
         `customer_address` VARCHAR(255) NOT NULL COMMENT '客户地址',
-        PRIMARY KEY (`id`, `address`)
+        PRIMARY KEY (`customer_id`, `customer_address`)
     ) COMMENT = '客户地址表';
 
 CREATE TABLE
@@ -44,7 +44,7 @@ CREATE TABLE
     IF NOT EXISTS market_order_customer (
         `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
         `customer_id` BIGINT(20) NOT NULL COMMENT '客户编号',
-        PRIMARY KEY ('customer_id', 'order_id')
+        PRIMARY KEY (`customer_id`, `order_id`)
     ) COMMENT = '订单客户关系表';
 
 CREATE TABLE
