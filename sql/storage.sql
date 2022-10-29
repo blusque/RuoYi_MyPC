@@ -66,4 +66,4 @@ CREATE TABLE
         `storage_id` BIGINT(20) NOT NULL COMMENT '仓库编号',
         `number` INT NOT NULL COMMENT '存储数量',
         PRIMARY KEY (`material_id`, `storage_id`)
-    ) COMMENT = '库存';
+    ) COMMENT = '库存记录';

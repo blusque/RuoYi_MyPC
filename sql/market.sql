@@ -19,7 +19,7 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS customer_address (
-        `customer_id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '客户编号',
+        `customer_id` BIGINT(20) NOT NULL COMMENT '客户编号',
         `customer_address` VARCHAR(255) NOT NULL COMMENT '客户地址',
         PRIMARY KEY (`customer_id`, `customer_address`)
     ) COMMENT = '客户地址表';
@@ -29,36 +29,27 @@ CREATE TABLE
         `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '订单编号',
         `date` DATE NOT NULL COMMENT '订单日期',
         `status` VARCHAR(10) NOT NULL COMMENT '订单状态',
+        `customer_id` BIGINT(20) NOT NULL COMMENT '客户编号',
+        `address` VARCHAR(255) NOT NULL COMMENT '送货地址',
+        `staff_id` BIGINT(20) NOT NULL COMMENT '销售员编号',
         PRIMARY KEY (`id`)
     ) COMMENT = '销售订单表';
 
 CREATE TABLE
     IF NOT EXISTS market_order_detail (
+        `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '订单明细编号',
         `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',
         `number` INT NOT NULL COMMENT '数量',
-        PRIMARY KEY (`order_id`, `material_id`)
+        PRIMARY KEY (`id`)
     ) COMMENT = '订单明细表';
 
 CREATE TABLE
-    IF NOT EXISTS market_order_customer (
-        `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
-        `customer_id` BIGINT(20) NOT NULL COMMENT '客户编号',
-        PRIMARY KEY (`customer_id`, `order_id`)
-    ) COMMENT = '订单客户关系表';
-
-CREATE TABLE
-    IF NOT EXISTS market_order_seller (
-        `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
-        `staff_id` BIGINT(20) NOT NULL COMMENT '销售员编号',
-        PRIMARY KEY (`order_id`, `staff_id`)
-    ) COMMENT = '订单销售员关系表';
-
-CREATE TABLE
     IF NOT EXISTS market_cancel_detail (
+        `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '订单明细编号',
         `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
         `date` DATE NOT NULL COMMENT '退货日期',
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',
         `number` INT NOT NULL COMMENT '退货数量',
-        PRIMARY KEY (`order_id`, `material_id`, `date`)
+        PRIMARY KEY (`id`)
     ) COMMENT = '退货明细表';

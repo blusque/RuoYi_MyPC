@@ -30,15 +30,9 @@ CREATE TABLE
         `material_id` BIGINT(20) NOT NULL COMMENT '子物料',
         `parent_id` BIGINT(20) NOT NULL COMMENT '父物料',
         `duration` INT NOT NULL COMMENT '预计耗时(单件)',
+        `factory_id` INT(3) NOT NULL COMMENT '车间编号',
         PRIMARY KEY (`id`)
     ) COMMENT = '工艺表';
-
-CREATE TABLE
-    IF NOT EXISTS sys_craft_factory (
-        `craft_id` BIGINT(20) NOT NULL COMMENT '工艺编号',
-        `factory_id` INT(3) NOT NULL COMMENT '车间编号',
-        PRIMARY KEY(`craft_id`, `factory_id`)
-    ) COMMENT = '工艺车间关系表';
 
 CREATE TABLE
     IF NOT EXISTS sys_storage (

@@ -29,6 +29,8 @@ CREATE TABLE
         `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '采购订单',
         `start` DATE NOT NULL COMMENT '申请日期',
         `end` DATE NOT NULL COMMENT '预定到达日期',
+        `supplier_id` BIGINT(20) NOT NULL COMMENT '供应商编号',
+        `staff_id` BIGINT(20) NOT NULL COMMENT '采购员编号',
         `purchase_order_status` VARCHAR(10) NOT NULL COMMENT '订单状态',
         PRIMARY KEY (`id`)
     ) COMMENT = '采购订单表';
@@ -41,12 +43,6 @@ CREATE TABLE
         PRIMARY KEY (`order_id`, `material_id`)
     ) COMMENT = '采购订单明细';
 
-CREATE TABLE
-    IF NOT EXISTS purchase_order_supplier (
-        `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
-        `supplier_id` BIGINT(20) NOT NULL COMMENT '供应商编号',
-        PRIMARY KEY (`order_id`, `supplier_id`)
-    ) COMMENT = '采购订单供应商关系表';
 
 CREATE TABLE
     IF NOT EXISTS purchase_cancel_detail (

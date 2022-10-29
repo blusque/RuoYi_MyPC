@@ -6,24 +6,24 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 车间管理对象 sys_factory
+ * 车间对象 sys_factory
  * 
- * @author mei
+ * @author laiyuan
  * @date 2022-10-27
  */
 public class SysFactory extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 车间编号 */
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long centerNum;
+    /** 加工位数量 */
+    @Excel(name = "加工位数量")
+    private Long centerNumber;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 备注 */
+    @Excel(name = "备注")
     private String comment;
 
     public void setId(Long id) 
@@ -35,14 +35,14 @@ public class SysFactory extends BaseEntity
     {
         return id;
     }
-    public void setCenterNum(Long centerNum) 
+    public void setCenterNumber(Long centerNumber) 
     {
-        this.centerNum = centerNum;
+        this.centerNumber = centerNumber;
     }
 
-    public Long getCenterNum() 
+    public Long getCenterNumber() 
     {
-        return centerNum;
+        return centerNumber;
     }
     public void setComment(String comment) 
     {
@@ -58,7 +58,7 @@ public class SysFactory extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("centerNum", getCenterNum())
+            .append("centerNumber", getCenterNumber())
             .append("comment", getComment())
             .toString();
     }

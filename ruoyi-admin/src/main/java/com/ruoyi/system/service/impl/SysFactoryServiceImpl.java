@@ -8,9 +8,9 @@ import com.ruoyi.system.domain.SysFactory;
 import com.ruoyi.system.service.ISysFactoryService;
 
 /**
- * 车间管理Service业务层处理
+ * 车间Service业务层处理
  * 
- * @author mei
+ * @author laiyuan
  * @date 2022-10-27
  */
 @Service
@@ -20,10 +20,10 @@ public class SysFactoryServiceImpl implements ISysFactoryService
     private SysFactoryMapper sysFactoryMapper;
 
     /**
-     * 查询车间管理
+     * 查询车间
      * 
-     * @param id 车间管理主键
-     * @return 车间管理
+     * @param id 车间主键
+     * @return 车间
      */
     @Override
     public SysFactory selectSysFactoryById(Long id)
@@ -32,10 +32,10 @@ public class SysFactoryServiceImpl implements ISysFactoryService
     }
 
     /**
-     * 查询车间管理列表
+     * 查询车间列表
      * 
-     * @param sysFactory 车间管理
-     * @return 车间管理
+     * @param sysFactory 车间
+     * @return 车间
      */
     @Override
     public List<SysFactory> selectSysFactoryList(SysFactory sysFactory)
@@ -44,9 +44,9 @@ public class SysFactoryServiceImpl implements ISysFactoryService
     }
 
     /**
-     * 新增车间管理
+     * 新增车间
      * 
-     * @param sysFactory 车间管理
+     * @param sysFactory 车间
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class SysFactoryServiceImpl implements ISysFactoryService
     }
 
     /**
-     * 修改车间管理
+     * 修改车间
      * 
-     * @param sysFactory 车间管理
+     * @param sysFactory 车间
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class SysFactoryServiceImpl implements ISysFactoryService
     }
 
     /**
-     * 批量删除车间管理
+     * 批量删除车间
      * 
-     * @param ids 需要删除的车间管理主键
+     * @param ids 需要删除的车间主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class SysFactoryServiceImpl implements ISysFactoryService
     }
 
     /**
-     * 删除车间管理信息
+     * 删除车间信息
      * 
-     * @param id 车间管理主键
+     * @param id 车间主键
      * @return 结果
      */
     @Override

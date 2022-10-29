@@ -6,19 +6,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="SysFactory" id="SysFactoryResult">
         <result property="id"    column="id"    />
-        <result property="centerNum"    column="center_num"    />
+        <result property="centerNumber"    column="center_number"    />
         <result property="comment"    column="comment"    />
     </resultMap>
 
     <sql id="selectSysFactoryVo">
-        select id, center_num, comment from sys_factory
+        select id, center_number, comment from sys_factory
     </sql>
 
     <select id="selectSysFactoryList" parameterType="SysFactory" resultMap="SysFactoryResult">
         <include refid="selectSysFactoryVo"/>
         <where>  
-            <if test="centerNum != null "> and center_num = #{centerNum}</if>
-            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="centerNumber != null "> and center_number >= #{centerNumber}</if>
+            <if test="comment != null  and comment != ''"> and comment like concat('%', #{comment}, '%')</if>
         </where>
     </select>
     
@@ -30,11 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertSysFactory" parameterType="SysFactory" useGeneratedKeys="true" keyProperty="id">
         insert into sys_factory
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="centerNum != null">center_num,</if>
+            <if test="centerNumber != null">center_number,</if>
             <if test="comment != null">comment,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="centerNum != null">#{centerNum},</if>
+            <if test="centerNumber != null">#{centerNumber},</if>
             <if test="comment != null">#{comment},</if>
          </trim>
     </insert>
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateSysFactory" parameterType="SysFactory">
         update sys_factory
         <trim prefix="SET" suffixOverrides=",">
-            <if test="centerNum != null">center_num = #{centerNum},</if>
+            <if test="centerNumber != null">center_number = #{centerNumber},</if>
             <if test="comment != null">comment = #{comment},</if>
         </trim>
         where id = #{id}

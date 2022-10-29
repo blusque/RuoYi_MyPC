@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询车间管理列表
+// 查询车间列表
 export function listFactory(query) {
   return request({
     url: '/system/factory/list',
@@ -9,7 +9,7 @@ export function listFactory(query) {
   })
 }
 
-// 查询车间管理详细
+// 查询车间详细
 export function getFactory(id) {
   return request({
     url: '/system/factory/' + id,
@@ -17,7 +17,7 @@ export function getFactory(id) {
   })
 }
 
-// 新增车间管理
+// 新增车间
 export function addFactory(data) {
   return request({
     url: '/system/factory',
@@ -26,7 +26,7 @@ export function addFactory(data) {
   })
 }
 
-// 修改车间管理
+// 修改车间
 export function updateFactory(data) {
   return request({
     url: '/system/factory',
@@ -35,7 +35,7 @@ export function updateFactory(data) {
   })
 }
 
-// 删除车间管理
+// 删除车间
 export function delFactory(id) {
   return request({
     url: '/system/factory/' + id,

@@ -1,10 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="${comment}" prop="centerNum">
+      <el-form-item label="车间ID" prop="id">
         <el-input
-          v-model="queryParams.centerNum"
-          placeholder="请输入${comment}"
+          v-model="queryParams.id"
+          placeholder="请输入车间ID"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="加工位" prop="centerNumber">
+        <el-input
+          v-model="queryParams.centerNumber"
+          placeholder="请输入加工位"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="备注" prop="comment">
+        <el-input
+          v-model="queryParams.comment"
+          placeholder="请输入备注"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -63,9 +79,9 @@
 
     <el-table v-loading="loading" :data="factoryList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="${comment}" align="center" prop="centerNum" />
-      <el-table-column label="${comment}" align="center" prop="comment" />
+      <el-table-column label="车间编号" align="center" prop="id" />
+      <el-table-column label="加工位" align="center" prop="centerNumber" />
+      <el-table-column label="备注（工艺、人员等信息）" align="center" prop="comment" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -94,14 +110,14 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改车间管理对话框 -->
+    <!-- 添加或修改车间对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="${comment}" prop="centerNum">
-          <el-input v-model="form.centerNum" placeholder="请输入${comment}" />
+        <el-form-item label="加工位" prop="centerNumber">
+          <el-input v-model="form.centerNumber" placeholder="请输入加工位数量" />
         </el-form-item>
-        <el-form-item label="${comment}">
-          <editor v-model="form.comment" :min-height="192"/>
+        <el-form-item label="备注" prop="comment">
+          <el-input v-model="form.comment" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -131,7 +147,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 车间管理表格数据
+      // 车间表格数据
       factoryList: [],
       // 弹出层标题
       title: "",
@@ -141,15 +157,16 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        centerNum: null,
+        id: null,
+        centerNumber: null,
         comment: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        centerNum: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
+        centerNumber: [
+          { required: true, message: "加工位数量不能为空", trigger: "blur" }
         ],
       }
     };
@@ -158,7 +175,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询车间管理列表 */
+    /** 查询车间列表 */
     getList() {
       this.loading = true;
       listFactory(this.queryParams).then(response => {
@@ -176,7 +193,7 @@ export default {
     reset() {
       this.form = {
         id: null,
-        centerNum: null,
+        centerNumber: null,
         comment: null
       };
       this.resetForm("form");
@@ -201,7 +218,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加车间管理";
+      this.title = "添加车间";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -210,7 +227,7 @@ export default {
       getFactory(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改车间管理";
+        this.title = "修改车间";
       });
     },
     /** 提交按钮 */
@@ -236,7 +253,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除车间管理编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除车间编号为"' + ids + '"的数据项？').then(function() {
         return delFactory(ids);
       }).then(() => {
         this.getList();

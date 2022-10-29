@@ -13,35 +13,16 @@ CREATE TABLE
         `id` BIGINT(20) NOT NULL COMMENT '工单编号',
         `date` DATE NOT NULL COMMENT '工单日期',
         `staff_id` BIGINT(20) NOT NULL COMMENT '员工编号',
+        `mission_id` BIGINT(20) NOT NULL COMMENT '任务编号',
+        `craft_id` BIGINT(20) NOT NULL COMMENT '工艺编号',
         PRIMARY KEY (`id`)
     ) COMMENT = '工单表';
 
 CREATE TABLE
-    IF NOT EXISTS worker_order_mission (
-        `order_id` BIGINT(20) NOT NULL COMMENT '工单编号',
-        `mission_id` BIGINT(20) NOT NULL COMMENT '任务编号',
-        PRIMARY KEY (`order_id`, `mission_id`)
-    ) COMMENT = '工单任务关系表';
-
-CREATE TABLE
-    IF NOT EXISTS work_order_craft (
-        `order_id` BIGINT(20) NOT NULL COMMENT '工单编号',
-        `craft_id` BIGINT(20) NOT NULL COMMENT '工艺编号',
-        PRIMARY KEY (`order_id`, `craft_id`)
-    ) COMMENT = '工单工艺关系表';
-
-CREATE TABLE
-    IF NOT EXISTS work_order_worker (
-        `order_id` BIGINT(20) not NULL COMMENT '工单编号',
-        `staff_id` BIGINT(20) NOT NULL COMMENT '员工编号',
-        PRIMARY KEY (`order_id`, `staff_id`)
-    ) COMMENT = '工单员工关系表';
-
-CREATE TABLE
     IF NOT EXISTS factory_worker (
-        `factory_id` INT(3) NOT NULL COMMENT '车间编号',
         `staff_id` BIGINT(20) NOT NULL COMMENT '员工编号',
-        PRIMARY KEY (`factory_id`, `staff_id`)
+        `factory_id` INT(3) NOT NULL COMMENT '车间编号',
+        PRIMARY KEY (`staff_id`)
     ) COMMENT = '车间员工关系表';
 
 CREATE TABLE

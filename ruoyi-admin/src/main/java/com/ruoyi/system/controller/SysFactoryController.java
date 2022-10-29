@@ -22,9 +22,9 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 车间管理Controller
+ * 车间Controller
  * 
- * @author mei
+ * @author laiyuan
  * @date 2022-10-27
  */
 @RestController
@@ -35,7 +35,7 @@ public class SysFactoryController extends BaseController
     private ISysFactoryService sysFactoryService;
 
     /**
-     * 查询车间管理列表
+     * 查询车间列表
      */
     @PreAuthorize("@ss.hasPermi('system:factory:list')")
     @GetMapping("/list")
@@ -47,20 +47,20 @@ public class SysFactoryController extends BaseController
     }
 
     /**
-     * 导出车间管理列表
+     * 导出车间列表
      */
     @PreAuthorize("@ss.hasPermi('system:factory:export')")
-    @Log(title = "车间管理", businessType = BusinessType.EXPORT)
+    @Log(title = "车间", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysFactory sysFactory)
     {
         List<SysFactory> list = sysFactoryService.selectSysFactoryList(sysFactory);
         ExcelUtil<SysFactory> util = new ExcelUtil<SysFactory>(SysFactory.class);
-        util.exportExcel(response, list, "车间管理数据");
+        util.exportExcel(response, list, "车间数据");
     }
 
     /**
-     * 获取车间管理详细信息
+     * 获取车间详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:factory:query')")
     @GetMapping(value = "/{id}")
@@ -70,10 +70,10 @@ public class SysFactoryController extends BaseController
     }
 
     /**
-     * 新增车间管理
+     * 新增车间
      */
     @PreAuthorize("@ss.hasPermi('system:factory:add')")
-    @Log(title = "车间管理", businessType = BusinessType.INSERT)
+    @Log(title = "车间", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysFactory sysFactory)
     {
@@ -81,10 +81,10 @@ public class SysFactoryController extends BaseController
     }
 
     /**
-     * 修改车间管理
+     * 修改车间
      */
     @PreAuthorize("@ss.hasPermi('system:factory:edit')")
-    @Log(title = "车间管理", businessType = BusinessType.UPDATE)
+    @Log(title = "车间", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysFactory sysFactory)
     {
@@ -92,10 +92,10 @@ public class SysFactoryController extends BaseController
     }
 
     /**
-     * 删除车间管理
+     * 删除车间
      */
     @PreAuthorize("@ss.hasPermi('system:factory:remove')")
-    @Log(title = "车间管理", businessType = BusinessType.DELETE)
+    @Log(title = "车间", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
