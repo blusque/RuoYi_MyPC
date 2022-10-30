@@ -27,7 +27,8 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS market_order (
         `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '订单编号',
-        `date` DATE NOT NULL COMMENT '订单日期',
+        `date` DATETIME NOT NULL COMMENT '订单日期',
+        `ddl` DATE NOT NULL COMMENT '订单截至日期',
         `status` VARCHAR(10) NOT NULL COMMENT '订单状态',
         `customer_id` BIGINT(20) NOT NULL COMMENT '客户编号',
         `address` VARCHAR(255) NOT NULL COMMENT '送货地址',
@@ -48,7 +49,7 @@ CREATE TABLE
     IF NOT EXISTS market_cancel_detail (
         `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '订单明细编号',
         `order_id` BIGINT(20) NOT NULL COMMENT '订单编号',
-        `date` DATE NOT NULL COMMENT '退货日期',
+        `date` DATETIME NOT NULL COMMENT '退货日期',
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',
         `number` INT NOT NULL COMMENT '退货数量',
         PRIMARY KEY (`id`)

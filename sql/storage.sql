@@ -62,8 +62,9 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS storage_record (
+        `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '库存记录编号',
         `material_id` BIGINT(20) NOT NULL COMMENT '物料编号',
         `storage_id` BIGINT(20) NOT NULL COMMENT '仓库编号',
         `number` INT NOT NULL COMMENT '存储数量',
-        PRIMARY KEY (`material_id`, `storage_id`)
+        PRIMARY KEY (`id`)
     ) COMMENT = '库存记录';

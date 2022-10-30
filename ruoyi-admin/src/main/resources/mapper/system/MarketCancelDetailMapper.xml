@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MarketCancelDetailMapper">
+    
+    <resultMap type="MarketCancelDetail" id="MarketCancelDetailResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="date"    column="date"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+    <sql id="selectMarketCancelDetailVo">
+        select id, order_id, date, material_id, number from market_cancel_detail
+    </sql>
+
+    <select id="selectMarketCancelDetailList" parameterType="MarketCancelDetail" resultMap="MarketCancelDetailResult">
+        <include refid="selectMarketCancelDetailVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="materialId != null "> and material_id = #{materialId}</if>
+            <if test="number != null "> and number = #{number}</if>
+        </where>
+    </select>
+    
+    <!-- <select id="selectMarketCancelDetailById" parameterType="Long" resultMap="MarketCancelDetailResult">
+        <include refid="selectMarketCancelDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarketCancelDetail" parameterType="MarketCancelDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into market_cancel_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="date != null">date,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="number != null">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="number != null">#{number},</if>
+         </trim>
+    </insert> -->
+
+    <insert id="batchMarketOrderDetail">
+        insert into market_order_detail ( order_id, date, material_id, number ) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.orderId}, #{item.date}, #{item.materialId}, #{item.number})
+        </foreach>
+    </insert>
+
+    <delete id="deleteMarketOrderDetailByOrderId" parameterType="Long">
+        delete from market_cancel_detail where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteMarketOrderDetailByOrderIds" parameterType="String">
+        delete from market_cancel_detail where order_id in 
+        <foreach collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMarketCancelDetailById" parameterType="Long">
+        delete from market_cancel_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteMarketCancelDetailByIds" parameterType="String">
+        delete from market_cancel_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -419,7 +419,7 @@ export default {
         this.open.showAddress = false;
       }
     },
-    onAddressAddClose(parentShow) {
+    onAddressAddClose() {
       this.open.address = false;
       if (this.parentDialog === 'main') {
         this.open.main = true;
