@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysStorageMapper">
+    
+    <resultMap type="SysStorage" id="SysStorageResult">
+        <result property="id"    column="id"    />
+        <result property="capacity"    column="capacity"    />
+    </resultMap>
+
+    <sql id="selectSysStorageVo">
+        select id, capacity from sys_storage
+    </sql>
+
+    <select id="selectSysStorageList" parameterType="SysStorage" resultMap="SysStorageResult">
+        <include refid="selectSysStorageVo"/>
+        <where>  
+            <if test="capacity != null "> and capacity = #{capacity}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysStorageById" parameterType="Long" resultMap="SysStorageResult">
+        <include refid="selectSysStorageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysStorage" parameterType="SysStorage" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="capacity != null">capacity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="capacity != null">#{capacity},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysStorage" parameterType="SysStorage">
+        update sys_storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="capacity != null">capacity = #{capacity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysStorageById" parameterType="Long">
+        delete from sys_storage where id = #{id}
+    </delete>
+
+    <delete id="deleteSysStorageByIds" parameterType="String">
+        delete from sys_storage where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
