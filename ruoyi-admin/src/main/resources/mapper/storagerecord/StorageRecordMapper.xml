@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.storage.mapper.StorageRecordMapper">
+    
+    <resultMap type="StorageRecord" id="StorageRecordResult">
+        <result property="id"    column="id"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="storageId"    column="storage_id"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+    <sql id="selectStorageRecordVo">
+        select id, material_id, storage_id, number from storage_record
+    </sql>
+
+    <select id="selectStorageRecordList" parameterType="StorageRecord" resultMap="StorageRecordResult">
+        <include refid="selectStorageRecordVo"/>
+        <where>  
+            <if test="materialId != null "> and material_id = #{materialId}</if>
+            <if test="storageId != null "> and storage_id = #{storageId}</if>
+        </where>
+    </select>
+    
+    <select id="selectStorageRecordById" parameterType="Long" resultMap="StorageRecordResult">
+        <include refid="selectStorageRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorageRecord" parameterType="StorageRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into storage_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialId != null">material_id,</if>
+            <if test="storageId != null">storage_id,</if>
+            <if test="number != null">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialId != null">#{materialId},</if>
+            <if test="storageId != null">#{storageId},</if>
+            <if test="number != null">#{number},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorageRecord" parameterType="StorageRecord">
+        update storage_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialId != null">material_id = #{materialId},</if>
+            <if test="storageId != null">storage_id = #{storageId},</if>
+            <if test="number != null">number = #{number},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageRecordById" parameterType="Long">
+        delete from storage_record where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageRecordByIds" parameterType="String">
+        delete from storage_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

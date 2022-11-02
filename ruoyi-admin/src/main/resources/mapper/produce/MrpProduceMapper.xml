@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mrp.mapper.MrpProduceMapper">
+    
+    <resultMap type="MrpProduce" id="MrpProduceResult">
+        <result property="mrpProduceId"    column="mrp_produce_id"    />
+        <result property="mrpProduceDate"    column="mrp_produce_date"    />
+        <result property="mrpProduceNameid"    column="mrp_produce_nameid"    />
+        <result property="mrpProduceNumber"    column="mrp_produce_number"    />
+    </resultMap>
+
+    <sql id="selectMrpProduceVo">
+        select mrp_produce_id, mrp_produce_date, mrp_produce_nameid, mrp_produce_number from mrp_produce
+    </sql>
+
+    <select id="selectMrpProduceList" parameterType="MrpProduce" resultMap="MrpProduceResult">
+        <include refid="selectMrpProduceVo"/>
+        <where>  
+            <if test="mrpProduceDate != null "> and mrp_produce_date = #{mrpProduceDate}</if>
+            <if test="mrpProduceNameid != null  and mrpProduceNameid != ''"> and mrp_produce_nameid = #{mrpProduceNameid}</if>
+            <if test="mrpProduceNumber != null "> and mrp_produce_number = #{mrpProduceNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectMrpProduceByMrpProduceId" parameterType="Long" resultMap="MrpProduceResult">
+        <include refid="selectMrpProduceVo"/>
+        where mrp_produce_id = #{mrpProduceId}
+    </select>
+        
+    <insert id="insertMrpProduce" parameterType="MrpProduce" useGeneratedKeys="true" keyProperty="mrpProduceId">
+        insert into mrp_produce
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mrpProduceDate != null">mrp_produce_date,</if>
+            <if test="mrpProduceNameid != null and mrpProduceNameid != ''">mrp_produce_nameid,</if>
+            <if test="mrpProduceNumber != null">mrp_produce_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mrpProduceDate != null">#{mrpProduceDate},</if>
+            <if test="mrpProduceNameid != null and mrpProduceNameid != ''">#{mrpProduceNameid},</if>
+            <if test="mrpProduceNumber != null">#{mrpProduceNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMrpProduce" parameterType="MrpProduce">
+        update mrp_produce
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mrpProduceDate != null">mrp_produce_date = #{mrpProduceDate},</if>
+            <if test="mrpProduceNameid != null and mrpProduceNameid != ''">mrp_produce_nameid = #{mrpProduceNameid},</if>
+            <if test="mrpProduceNumber != null">mrp_produce_number = #{mrpProduceNumber},</if>
+        </trim>
+        where mrp_produce_id = #{mrpProduceId}
+    </update>
+
+    <delete id="deleteMrpProduceByMrpProduceId" parameterType="Long">
+        delete from mrp_produce where mrp_produce_id = #{mrpProduceId}
+    </delete>
+
+    <delete id="deleteMrpProduceByMrpProduceIds" parameterType="String">
+        delete from mrp_produce where mrp_produce_id in 
+        <foreach item="mrpProduceId" collection="array" open="(" separator="," close=")">
+            #{mrpProduceId}
+        </foreach>
+    </delete>
+</mapper>

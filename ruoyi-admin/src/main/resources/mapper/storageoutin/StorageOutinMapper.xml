@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.storage.mapper.StorageOutinMapper">
+    
+    <resultMap type="StorageOutin" id="StorageOutinResult">
+        <result property="id"    column="id"    />
+        <result property="outorin"    column="outorin"    />
+        <result property="kdtype"    column="kdtype"    />
+        <result property="date"    column="date"    />
+        <result property="staffId"    column="staff_id"    />
+    </resultMap>
+
+    <resultMap id="StorageOutinStorageOutinDetailResult" type="StorageOutin" extends="StorageOutinResult">
+        <collection property="storageOutinDetailList" notNullColumn="sub_id" javaType="java.util.List" resultMap="StorageOutinDetailResult" />
+    </resultMap>
+
+    <resultMap type="StorageOutinDetail" id="StorageOutinDetailResult">
+        <result property="id"    column="sub_id"    />
+        <result property="outinId"    column="sub_outin_id"    />
+        <result property="materialId"    column="sub_material_id"    />
+        <result property="storageId"    column="sub_storage_id"    />
+        <result property="number"    column="sub_number"    />
+    </resultMap>
+
+    <sql id="selectStorageOutinVo">
+        select id, outorin, kdtype, date, staff_id from storage_outin
+    </sql>
+
+    <select id="selectStorageOutinList" parameterType="StorageOutin" resultMap="StorageOutinResult">
+        <include refid="selectStorageOutinVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="outorin != null  and outorin != ''"> and outorin = #{outorin}</if>
+            <if test="kdtype != null  and kdtype != ''"> and kdtype = #{kdtype}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="staffId != null "> and staff_id = #{staffId}</if>
+        </where>
+    </select>
+    
+    <select id="selectStorageOutinById" parameterType="Long" resultMap="StorageOutinStorageOutinDetailResult">
+        select a.id, a.outorin, a.kdtype, a.date, a.staff_id,
+ b.id as sub_id, b.outin_id as sub_outin_id, b.material_id as sub_material_id, b.storage_id as sub_storage_id, b.number as sub_number
+        from storage_outin a
+        left join storage_outin_detail b on b.outin_id = a.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertStorageOutin" parameterType="StorageOutin" useGeneratedKeys="true" keyProperty="id">
+        insert into storage_outin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="outorin != null and outorin != ''">outorin,</if>
+            <if test="kdtype != null and kdtype != ''">kdtype,</if>
+            <if test="date != null">date,</if>
+            <if test="staffId != null">staff_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="outorin != null and outorin != ''">#{outorin},</if>
+            <if test="kdtype != null and kdtype != ''">#{kdtype},</if>
+            <if test="date != null">#{date},</if>
+            <if test="staffId != null">#{staffId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorageOutin" parameterType="StorageOutin">
+        update storage_outin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="outorin != null and outorin != ''">outorin = #{outorin},</if>
+            <if test="kdtype != null and kdtype != ''">kdtype = #{kdtype},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="staffId != null">staff_id = #{staffId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageOutinById" parameterType="Long">
+        delete from storage_outin where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageOutinByIds" parameterType="String">
+        delete from storage_outin where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteStorageOutinDetailByOutinIds" parameterType="String">
+        delete from storage_outin_detail where outin_id in 
+        <foreach item="outinId" collection="array" open="(" separator="," close=")">
+            #{outinId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteStorageOutinDetailByOutinId" parameterType="Long">
+        delete from storage_outin_detail where outin_id = #{outinId}
+    </delete>
+
+    <insert id="batchStorageOutinDetail">
+        insert into storage_outin_detail( id, outin_id, material_id, storage_id, number) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.outinId}, #{item.materialId}, #{item.storageId}, #{item.number})
+        </foreach>
+    </insert>
+</mapper>
