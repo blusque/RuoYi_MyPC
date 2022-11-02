@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mrp.mapper.MrpMpsMapper">
+    
+    <resultMap type="MrpMps" id="MrpMpsResult">
+        <result property="productId"    column="product_id"    />
+        <result property="productTime"    column="product_time"    />
+        <result property="productNumber"    column="product_number"    />
+        <result property="productNameid"    column="product_nameid"    />
+        <result property="productName"    column="product_name"    />
+    </resultMap>
+
+    <sql id="selectMrpMpsVo">
+        select product_id, product_time, product_number, product_nameid, product_name from mrp_mps
+    </sql>
+
+    <select id="selectMrpMpsList" parameterType="MrpMps" resultMap="MrpMpsResult">
+        <include refid="selectMrpMpsVo"/>
+        <where>  
+            <if test="productTime != null "> and product_time = #{productTime}</if>
+            <if test="productNumber != null "> and product_number = #{productNumber}</if>
+            <if test="productNameid != null "> and product_nameid = #{productNameid}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectMrpMpsByProductId" parameterType="Long" resultMap="MrpMpsResult">
+        <include refid="selectMrpMpsVo"/>
+        where product_id = #{productId}
+    </select>
+        
+    <insert id="insertMrpMps" parameterType="MrpMps" useGeneratedKeys="true" keyProperty="productId">
+        insert into mrp_mps
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productTime != null">product_time,</if>
+            <if test="productNumber != null">product_number,</if>
+            <if test="productNameid != null">product_nameid,</if>
+            <if test="productName != null">product_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productTime != null">#{productTime},</if>
+            <if test="productNumber != null">#{productNumber},</if>
+            <if test="productNameid != null">#{productNameid},</if>
+            <if test="productName != null">#{productName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMrpMps" parameterType="MrpMps">
+        update mrp_mps
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productTime != null">product_time = #{productTime},</if>
+            <if test="productNumber != null">product_number = #{productNumber},</if>
+            <if test="productNameid != null">product_nameid = #{productNameid},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteMrpMpsByProductId" parameterType="Long">
+        delete from mrp_mps where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteMrpMpsByProductIds" parameterType="String">
+        delete from mrp_mps where product_id in 
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+</mapper>

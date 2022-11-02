@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mrp.mapper.MrpPurchaseMapper">
+    
+    <resultMap type="MrpPurchase" id="MrpPurchaseResult">
+        <result property="mrpPurchaseId"    column="mrp_purchase_id"    />
+        <result property="mrpPurchaseDate"    column="mrp_purchase_date"    />
+        <result property="mrpPurchaseNameid"    column="mrp_purchase_nameid"    />
+        <result property="mrpPurchaseNumber"    column="mrp_purchase_number"    />
+    </resultMap>
+
+    <sql id="selectMrpPurchaseVo">
+        select mrp_purchase_id, mrp_purchase_date, mrp_purchase_nameid, mrp_purchase_number from mrp_purchase
+    </sql>
+
+    <select id="selectMrpPurchaseList" parameterType="MrpPurchase" resultMap="MrpPurchaseResult">
+        <include refid="selectMrpPurchaseVo"/>
+        <where>  
+            <if test="mrpPurchaseDate != null "> and mrp_purchase_date = #{mrpPurchaseDate}</if>
+            <if test="mrpPurchaseNameid != null  and mrpPurchaseNameid != ''"> and mrp_purchase_nameid = #{mrpPurchaseNameid}</if>
+            <if test="mrpPurchaseNumber != null "> and mrp_purchase_number = #{mrpPurchaseNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectMrpPurchaseByMrpPurchaseId" parameterType="Long" resultMap="MrpPurchaseResult">
+        <include refid="selectMrpPurchaseVo"/>
+        where mrp_purchase_id = #{mrpPurchaseId}
+    </select>
+        
+    <insert id="insertMrpPurchase" parameterType="MrpPurchase" useGeneratedKeys="true" keyProperty="mrpPurchaseId">
+        insert into mrp_purchase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mrpPurchaseDate != null">mrp_purchase_date,</if>
+            <if test="mrpPurchaseNameid != null and mrpPurchaseNameid != ''">mrp_purchase_nameid,</if>
+            <if test="mrpPurchaseNumber != null">mrp_purchase_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mrpPurchaseDate != null">#{mrpPurchaseDate},</if>
+            <if test="mrpPurchaseNameid != null and mrpPurchaseNameid != ''">#{mrpPurchaseNameid},</if>
+            <if test="mrpPurchaseNumber != null">#{mrpPurchaseNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMrpPurchase" parameterType="MrpPurchase">
+        update mrp_purchase
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mrpPurchaseDate != null">mrp_purchase_date = #{mrpPurchaseDate},</if>
+            <if test="mrpPurchaseNameid != null and mrpPurchaseNameid != ''">mrp_purchase_nameid = #{mrpPurchaseNameid},</if>
+            <if test="mrpPurchaseNumber != null">mrp_purchase_number = #{mrpPurchaseNumber},</if>
+        </trim>
+        where mrp_purchase_id = #{mrpPurchaseId}
+    </update>
+
+    <delete id="deleteMrpPurchaseByMrpPurchaseId" parameterType="Long">
+        delete from mrp_purchase where mrp_purchase_id = #{mrpPurchaseId}
+    </delete>
+
+    <delete id="deleteMrpPurchaseByMrpPurchaseIds" parameterType="String">
+        delete from mrp_purchase where mrp_purchase_id in 
+        <foreach item="mrpPurchaseId" collection="array" open="(" separator="," close=")">
+            #{mrpPurchaseId}
+        </foreach>
+    </delete>
+</mapper>
