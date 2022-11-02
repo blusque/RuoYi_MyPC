@@ -22,6 +22,10 @@ public class SysMaterial extends BaseEntity
     @Excel(name = "物料名称")
     private String name;
 
+    /** 物料名称 */
+    @Excel(name = "物料分类")
+    private String property;
+
     /** 获取途径 */
     @Excel(name = "获取途径")
     private String from;
@@ -48,6 +52,15 @@ public class SysMaterial extends BaseEntity
     {
         return name;
     }
+    public void setProperty(String property) 
+    {
+        this.property = property;
+    }
+
+    public String getProperty() 
+    {
+        return property;
+    }
     public void setFrom(String from) 
     {
         this.from = from;
@@ -72,6 +85,7 @@ public class SysMaterial extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
+            .append("property", getProperty())
             .append("from", getFrom())
             .append("duration", getDuration())
             .toString();

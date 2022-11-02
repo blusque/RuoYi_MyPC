@@ -9,6 +9,14 @@ export function listOrder(data) {
   })
 }
 
+export function listOrderFromTo(query) {
+  return request({
+    url: '/market/order/list/from_to',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询销售订单列表
 export function listOrderDetail(query) {
   return request({
@@ -40,6 +48,14 @@ export function getOrderList(ids) {
   return request({
     url: '/market/order/' + ids,
     method: 'get'
+  })
+}
+
+export function getReportByMaterialName(query) {
+  return request({
+    url: '/market/order/search/name',
+    method: 'get',
+    params: query,
   })
 }
 

@@ -21,7 +21,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysCraftVo"/>
         <where>  
             <if test="craftName != null  and craftName != ''"> and craft_name like concat('%', #{craftName}, '%')</if>
+            <if test="materialId != null "> and material_id = #{materialId}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="factoryId != null "> and factory_id = #{factoryId}</if>
         </where>
     </select>
     
