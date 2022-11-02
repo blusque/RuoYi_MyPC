@@ -13,6 +13,7 @@ import com.ruoyi.market.mapper.MarketCancelDetailMapper;
 import com.ruoyi.market.mapper.MarketOrderMapper;
 import com.ruoyi.market.domain.MarketOrder;
 import com.ruoyi.market.domain.MarketOrderDetail;
+import com.ruoyi.market.domain.FromTo;
 import com.ruoyi.market.domain.MarketCancelDetail;
 import com.ruoyi.market.service.IMarketOrderService;
 
@@ -61,6 +62,7 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
      * @param marketOrder 销售订单
      * @return 销售订单
      */
+    @Transactional
     @Override
     public List<MarketOrder> selectMarketOrderList(MarketOrder marketOrder) {
         List<MarketOrderDetail> detailList = marketOrder.getMarketOrderDetailList();
@@ -126,6 +128,19 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
         else {
             return mid;
         }
+    }
+
+    @Transactional
+    @Override
+    public List<MarketOrder> selectMarketOrderListFromTo(FromTo fromTo) {
+        List<MarketOrder> result = new ArrayList<>();
+        List<MarketOrder> fromList = marketOrderMapper.selectMarketOrderListByDate(fromTo.getFrom());
+        List<MarketOrder> toList = marketOrderMapper.selectMarketOrderListByDate(fromTo.getTo());
+
+        for (int i = toList.size(); i < fromList.size(); ++i) {
+            result.add(fromList.get(i));
+        }
+        return result;
     }
 
     /**
@@ -364,8 +379,8 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
     @Scheduled(cron = "0 0 1 * * ?")
     @Override
     public void dailyCheckOrderStatus() {
-        Long tenDays = Long.valueOf(10);
-        Long zeroDays = Long.valueOf(0);
+        Integer tenDays = Integer.valueOf(10);
+        Integer zeroDays = Integer.valueOf(0);
         List<MarketOrder> nearToDateList = marketOrderMapper.selectMarketOrderListByDDL(tenDays);
         List<MarketOrder> pastList = marketOrderMapper.selectMarketOrderListByDDL(zeroDays);
         if (nearToDateList == null) nearToDateList = new ArrayList<MarketOrder>();

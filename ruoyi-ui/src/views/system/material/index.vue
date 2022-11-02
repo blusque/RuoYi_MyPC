@@ -17,6 +17,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="分类" prop="property">
+        <el-input
+          v-model="queryParams.property"
+          placeholder="请输入物料分类"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -73,7 +81,16 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="物料编号" align="center" prop="id" />
       <el-table-column label="物料名称" align="center" prop="name" />
-      <el-table-column label="获取途径" align="center" prop="from" />
+      <el-table-column label="物料分类" align="center" prop="property">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.product_or_material" :value="scope.row.property" />
+        </template>
+      </el-table-column>
+      <el-table-column label="获取途径" align="center" prop="from">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.material_from" :value="scope.row.from" />
+        </template>
+      </el-table-column>
       <el-table-column label="预计用时" align="center" prop="duration" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -109,8 +126,17 @@
         <el-form-item label="物料名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入物料名称" />
         </el-form-item>
+        <el-form-item label="物料分类" prop="property">
+          <el-radio-group v-model="form.property">
+            <el-radio v-for="dict in dict.type.product_or_material" :key="dict.value" :label="dict.value">{{ dict.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="获取途径" prop="from">
-          <el-input v-model="form.from" placeholder="请输入获取途径" />
+          <el-radio-group v-model="form.from">
+            <el-radio v-for="dict in dict.type.material_from" :key="dict.value" :label="dict.value">{{ dict.label }}
+            </el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="预计用时" prop="duration">
           <el-input v-model="form.duration" placeholder="请输入预计用时" />
@@ -129,6 +155,7 @@ import { listMaterial, getMaterial, delMaterial, addMaterial, updateMaterial } f
 
 export default {
   name: "Material",
+  dicts: ['material_from', 'product_or_material'],
   data() {
     return {
       // 遮罩层
@@ -162,6 +189,9 @@ export default {
       rules: {
         name: [
           { required: true, message: "物料名称不能为空", trigger: "blur" }
+        ],
+        property: [
+          { required: true, message: "物料分类不能为空", trigger: "blur" }
         ],
         from: [
           { required: true, message: "获取途径不能为空", trigger: "blur" }

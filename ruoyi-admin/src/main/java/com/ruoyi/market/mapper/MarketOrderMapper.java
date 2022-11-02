@@ -33,7 +33,7 @@ public interface MarketOrderMapper
 	 * @param id 销售订单主键
 	 * @return 销售订单
 	 */
-	public List<MarketOrder> selectMarketOrderListByDate(Long duration);
+	public List<MarketOrder> selectMarketOrderListByDate(Integer duration);
 
 	/**
 	 * 查询销售订单
@@ -41,7 +41,7 @@ public interface MarketOrderMapper
 	 * @param id 销售订单主键
 	 * @return 销售订单
 	 */
-	public List<MarketOrder> selectMarketOrderListByDDL(Long duration);
+	public List<MarketOrder> selectMarketOrderListByDDL(Integer duration);
 
 	/**
 	 * 查询销售订单列表

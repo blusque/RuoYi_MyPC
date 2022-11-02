@@ -3,15 +3,15 @@ package com.ruoyi.system.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.TreeEntity;
 
 /**
- * 工艺管理对象 sys_craft
+ * 工艺对象 sys_craft
  * 
  * @author ruoyi
- * @date 2022-10-29
+ * @date 2022-11-02
  */
-public class SysCraft extends BaseEntity
+public class SysCraft extends TreeEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -25,10 +25,6 @@ public class SysCraft extends BaseEntity
     /** 子物料 */
     @Excel(name = "子物料")
     private Long materialId;
-
-    /** 父物料 */
-    @Excel(name = "父物料")
-    private Long parentId;
 
     /** 预计耗时(单件) */
     @Excel(name = "预计耗时(单件)")
@@ -64,15 +60,6 @@ public class SysCraft extends BaseEntity
     public Long getMaterialId() 
     {
         return materialId;
-    }
-    public void setParentId(Long parentId) 
-    {
-        this.parentId = parentId;
-    }
-
-    public Long getParentId() 
-    {
-        return parentId;
     }
     public void setDuration(Long duration) 
     {

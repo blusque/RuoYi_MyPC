@@ -9,6 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="子物料" prop="materialId">
+        <el-input
+          v-model="queryParams.materialId"
+          placeholder="请输入子物料"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="父物料" prop="parentId">
         <el-input
           v-model="queryParams.parentId"
@@ -17,8 +25,24 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="预计耗时(单件)" prop="duration" label-width="110px">
+        <el-input
+          v-model="queryParams.duration"
+          placeholder="请输入预计耗时(单件)"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车间编号" prop="factoryId">
+        <el-input
+          v-model="queryParams.factoryId"
+          placeholder="请输入车间编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+	    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -36,43 +60,25 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
+          type="info"
           plain
-          icon="el-icon-edit"
+          icon="el-icon-sort"
           size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:craft:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:craft:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:craft:export']"
-        >导出</el-button>
+          @click="toggleExpandAll"
+        >展开/折叠</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="craftList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="工艺编号" align="center" prop="id" />
-      <el-table-column label="工艺名称" align="center" prop="craftName" />
+    <el-table
+      v-if="refreshTable"
+      v-loading="loading"
+      :data="craftList"
+      row-key="materialId"
+      :default-expand-all="isExpandAll"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    >
+      <el-table-column label="工艺名称" prop="craftName" />
       <el-table-column label="子物料" align="center" prop="materialId" />
       <el-table-column label="父物料" align="center" prop="parentId" />
       <el-table-column label="预计耗时(单件)" align="center" prop="duration" />
@@ -89,6 +95,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-plus"
+            @click="handleAdd(scope.row)"
+            v-hasPermi="['system:craft:add']"
+          >新增</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:craft:remove']"
@@ -96,16 +109,8 @@
         </template>
       </el-table-column>
     </el-table>
-    
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
 
-    <!-- 添加或修改工艺管理对话框 -->
+    <!-- 添加或修改工艺对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="工艺名称" prop="craftName">
@@ -115,7 +120,7 @@
           <el-input v-model="form.materialId" placeholder="请输入子物料" />
         </el-form-item>
         <el-form-item label="父物料" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入父物料" />
+          <treeselect v-model="form.parentId" :options="craftOptions" :normalizer="normalizer" placeholder="请选择父物料" />
         </el-form-item>
         <el-form-item label="预计耗时(单件)" prop="duration">
           <el-input v-model="form.duration" placeholder="请输入预计耗时(单件)" />
@@ -134,35 +139,39 @@
 
 <script>
 import { listCraft, getCraft, delCraft, addCraft, updateCraft } from "@/api/system/craft";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Craft",
+  components: {
+    Treeselect
+  },
   data() {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
-      // 总条数
-      total: 0,
-      // 工艺管理表格数据
+      // 工艺表格数据
       craftList: [],
+      // 工艺树选项
+      craftOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否展开，默认全部展开
+      isExpandAll: true,
+      // 重新渲染表格状态
+      refreshTable: true,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
         craftName: null,
+        materialId: null,
         parentId: null,
+        duration: null,
+        factoryId: null
       },
       // 表单参数
       form: {},
@@ -190,13 +199,32 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询工艺管理列表 */
+    /** 查询工艺列表 */
     getList() {
       this.loading = true;
       listCraft(this.queryParams).then(response => {
-        this.craftList = response.rows;
-        this.total = response.total;
+        this.craftList = this.handleTree(response.data, "materialId", "parentId");
         this.loading = false;
+      });
+    },
+    /** 转换工艺数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.materialId,
+        label: node.craftName,
+        children: node.children
+      };
+    },
+	/** 查询工艺下拉树结构 */
+    getTreeselect() {
+      listCraft().then(response => {
+        this.craftOptions = [];
+        const data = { materialId: 0, craftName: '顶级节点', children: [] };
+        data.children = this.handleTree(response.data, "materialId", "parentId");
+        this.craftOptions.push(data);
       });
     },
     // 取消按钮
@@ -218,7 +246,6 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
       this.getList();
     },
     /** 重置按钮操作 */
@@ -226,26 +253,37 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd(row) {
       this.reset();
+      this.getTreeselect();
+      if (row != null && row.materialId) {
+        this.form.parentId = row.materialId;
+      } else {
+        this.form.parentId = 0;
+      }
       this.open = true;
-      this.title = "添加工艺管理";
+      this.title = "添加工艺";
+    },
+    /** 展开/折叠操作 */
+    toggleExpandAll() {
+      this.refreshTable = false;
+      this.isExpandAll = !this.isExpandAll;
+      this.$nextTick(() => {
+        this.refreshTable = true;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getCraft(id).then(response => {
+      this.getTreeselect();
+      if (row != null) {
+        this.form.parentId = row.materialId;
+      }
+      getCraft(row.id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改工艺管理";
+        this.title = "修改工艺";
       });
     },
     /** 提交按钮 */
@@ -270,19 +308,12 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除工艺管理编号为"' + ids + '"的数据项？').then(function() {
-        return delCraft(ids);
+      this.$modal.confirm('是否确认删除工艺编号为"' + row.id + '"的数据项？').then(function() {
+        return delCraft(row.id);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('system/craft/export', {
-        ...this.queryParams
-      }, `craft_${new Date().getTime()}.xlsx`)
     }
   }
 };

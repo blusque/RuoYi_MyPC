@@ -19,6 +19,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.market.domain.MarketOrder;
 import com.ruoyi.market.domain.MarketOrderDetail;
 import com.ruoyi.market.domain.MarketCancelDetail;
+import com.ruoyi.market.domain.FromTo;
 import com.ruoyi.market.service.IMarketOrderService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -45,6 +46,17 @@ public class MarketOrderController extends BaseController
     {
         startPage();
         return AjaxResult.success(marketOrderService.selectMarketOrderList(marketOrder));
+    }
+
+    /**
+     * 查询销售订单列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:market_order:list')")
+    @GetMapping("/list/from_to")
+    public TableDataInfo list(FromTo fromTo)
+    {
+        List<MarketOrder> list = marketOrderService.selectMarketOrderListFromTo(fromTo);
+        return getDataTable(list);
     }
 
     /**
