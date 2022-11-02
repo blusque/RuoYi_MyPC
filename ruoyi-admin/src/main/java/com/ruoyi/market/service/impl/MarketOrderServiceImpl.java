@@ -1,18 +1,20 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.market.service.impl;
 
 import java.util.List;
 import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.ruoyi.system.mapper.MarketOrderDetailMapper;
-import com.ruoyi.system.mapper.MarketCancelDetailMapper;
-import com.ruoyi.system.mapper.MarketOrderMapper;
-import com.ruoyi.system.domain.MarketOrder;
-import com.ruoyi.system.domain.MarketOrderDetail;
-import com.ruoyi.system.domain.MarketCancelDetail;
-import com.ruoyi.system.service.IMarketOrderService;
+import com.ruoyi.market.mapper.MarketOrderDetailMapper;
+import com.ruoyi.market.mapper.MarketCancelDetailMapper;
+import com.ruoyi.market.mapper.MarketOrderMapper;
+import com.ruoyi.market.domain.MarketOrder;
+import com.ruoyi.market.domain.MarketOrderDetail;
+import com.ruoyi.market.domain.MarketCancelDetail;
+import com.ruoyi.market.service.IMarketOrderService;
 
 /**
  * 销售订单Service业务层处理
@@ -164,8 +166,8 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
     @Transactional
     @Override
     public int deleteMarketOrderByIds(Long[] ids) {
-        marketOrderDetailMapper.deleteMarketOrderDetailByIds(ids);
-        marketCancelDetailMapper.deleteMarketCancelDetailByIds(ids);
+        marketOrderDetailMapper.deleteMarketOrderDetailByOrderIds(ids);
+        marketCancelDetailMapper.deleteMarketCancelDetailByOrderIds(ids);
         return marketOrderMapper.deleteMarketOrderByIds(ids);
     }
 
@@ -276,7 +278,8 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
      */
     @Override
     public int insertMarketCancelDetail(List<MarketCancelDetail> marketCancelDetailList) {
-        return marketCancelDetailMapper.batchMarketCancelDetail(marketCancelDetailList);
+        int row = marketCancelDetailMapper.batchMarketCancelDetail(marketCancelDetailList);
+        return row;
     }
 
     /**
@@ -288,6 +291,7 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
     @Transactional
     @Override
     public int updateMarketCancelDetail(List<MarketCancelDetail> marketCancelDetailList) {
+        List<MarketCancelDetail> existedList = marketCancelDetailMapper.selectMarketCancelDetailList(null);
         Long orderId = marketCancelDetailList.get(0).getOrderId();
         marketCancelDetailMapper.deleteMarketCancelDetailByOrderId(orderId);
         List<MarketCancelDetail> list = new ArrayList<MarketCancelDetail>();
@@ -295,7 +299,44 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
             marketCancelDetail.setOrderId(orderId);
             list.add(marketCancelDetail);
         }
-        return insertMarketCancelDetail(list);
+        int row = insertMarketCancelDetail(list);
+        MarketOrderDetail orderDetail = new MarketOrderDetail();
+        orderDetail.setOrderId(orderId);
+        List<MarketOrderDetail> orderDetailList = marketOrderDetailMapper.selectMarketOrderDetailList(orderDetail);
+        if (existedList == null) {
+            for (int i = 0; i < marketCancelDetailList.size(); ++i) {
+                MarketCancelDetail nowDetail = marketCancelDetailList.get(i);
+                Long materialId = nowDetail.getMaterialId();
+                Long num = nowDetail.getNumber();
+                for (MarketOrderDetail orderDetail2 : orderDetailList) {
+                    if (orderDetail2.getMaterialId() == materialId) {
+                        Long nowNum = orderDetail2.getNumber();
+                        orderDetail2.setNumber((nowNum - num) >= 0 ? nowNum - num : 0);
+                    }
+                }
+            }
+            System.out.println(orderDetailList);
+            updateMarketOrderDetail(orderDetailList);
+        }
+        else {
+            for (int i = 0; i < marketCancelDetailList.size(); ++i) {
+                MarketCancelDetail nowDetail = marketCancelDetailList.get(i);
+                if (existedList.size() > i && existedList.get(i).getId() == nowDetail.getId()) {
+                    continue;
+                }
+                Long materialId = nowDetail.getMaterialId();
+                Long num = nowDetail.getNumber();
+                for (MarketOrderDetail orderDetail2 : orderDetailList) {
+                    if (orderDetail2.getMaterialId() == materialId) {
+                        Long nowNum = orderDetail2.getNumber();
+                        orderDetail2.setNumber((nowNum - num) >= 0 ? nowNum - num : 0);
+                    }
+                }
+            }
+            System.out.println(orderDetailList);
+            updateMarketOrderDetail(orderDetailList);
+        }
+        return row;
     }
 
     /**
@@ -304,6 +345,7 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
      * @param ids 需要删除的退货明细主键集合
      * @return 结果
      */
+    @Override
     public int deleteMarketCancelDetailByIds(Long[] ids) {
         return marketCancelDetailMapper.deleteMarketCancelDetailByIds(ids);
     }
@@ -314,7 +356,27 @@ public class MarketOrderServiceImpl implements IMarketOrderService {
      * @param id 退货明细主键
      * @return 结果
      */
+    @Override
     public int deleteMarketCancelDetailById(Long id) {
         return marketOrderDetailMapper.deleteMarketOrderDetailById(id);
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?")
+    @Override
+    public void dailyCheckOrderStatus() {
+        Long tenDays = Long.valueOf(10);
+        Long zeroDays = Long.valueOf(0);
+        List<MarketOrder> nearToDateList = marketOrderMapper.selectMarketOrderListByDDL(tenDays);
+        List<MarketOrder> pastList = marketOrderMapper.selectMarketOrderListByDDL(zeroDays);
+        if (nearToDateList == null) nearToDateList = new ArrayList<MarketOrder>();
+        if (pastList == null) pastList = new ArrayList<MarketOrder>();
+        for (MarketOrder marketOrder : nearToDateList) {
+            marketOrder.setStatus(Long.valueOf(5).toString());
+            updateMarketOrder(marketOrder);
+        }
+        for (MarketOrder marketOrder : pastList) {
+            marketOrder.setStatus(Long.valueOf(6).toString());
+            updateMarketOrder(marketOrder);
+        }
     }
 }

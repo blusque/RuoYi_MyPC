@@ -1,7 +1,7 @@
-package com.ruoyi.system.mapper;
+package com.ruoyi.market.mapper;
 
 import java.util.List;
-import com.ruoyi.system.domain.MarketOrder;
+import com.ruoyi.market.domain.MarketOrder;
 
 /**
  * 销售订单Mapper接口
@@ -26,6 +26,22 @@ public interface MarketOrderMapper
 	 * @return 销售订单
 	 */
 	public List<MarketOrder> selectMarketOrderListByIds(Long[] ids);
+
+	/**
+	 * 查询销售订单
+	 * 
+	 * @param id 销售订单主键
+	 * @return 销售订单
+	 */
+	public List<MarketOrder> selectMarketOrderListByDate(Long duration);
+
+	/**
+	 * 查询销售订单
+	 * 
+	 * @param id 销售订单主键
+	 * @return 销售订单
+	 */
+	public List<MarketOrder> selectMarketOrderListByDDL(Long duration);
 
 	/**
 	 * 查询销售订单列表

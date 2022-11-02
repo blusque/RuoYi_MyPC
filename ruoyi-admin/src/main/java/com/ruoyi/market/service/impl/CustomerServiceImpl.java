@@ -1,15 +1,16 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.market.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import org.springframework.transaction.annotation.Transactional;
-import com.ruoyi.system.domain.Customer;
-import com.ruoyi.system.domain.CustomerAddress;
-import com.ruoyi.system.mapper.CustomerMapper;
-import com.ruoyi.system.mapper.CustomerAddressMapper;
-import com.ruoyi.system.service.ICustomerService;
+
+import com.ruoyi.market.domain.Customer;
+import com.ruoyi.market.domain.CustomerAddress;
+import com.ruoyi.market.mapper.CustomerMapper;
+import com.ruoyi.market.mapper.CustomerAddressMapper;
+import com.ruoyi.market.service.ICustomerService;
 
 /**
  * 客户管理Service业务层处理
@@ -24,6 +25,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Autowired
     private CustomerAddressMapper customerAddressMapper;
+
+    // @Autowired
+    // private List<String> totalCustomerIds;
+
+    // @Autowired
+    // private List<String> totalCustomerAddress;
 
     /**
      * 查询客户管理
@@ -186,5 +193,69 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public int deleteCustomerAddress(CustomerAddress customerAddress) {
         return customerAddressMapper.deleteCustomerAddress(customerAddress);
+    }
+
+    /**
+     * 根据给定数字列出客户编号列表
+     * 
+     * @param partId
+     * @return
+     */
+    @Override
+    public List<Long> selectCustomerIdsByGivenNum(Customer customer) {
+        Long partId = customer.getId();
+        List<Long> result = new ArrayList<Long>();
+        List<Customer> list = new ArrayList<Customer>();
+        String idStr = null;
+        System.out.println(partId);
+        if (partId == null) {
+            list = customerMapper.selectCustomerList(null);
+        }
+        else {
+            idStr = partId.toString();
+            list = customerMapper.selectCustomerByLargerThanId(partId);
+        }
+
+        if (idStr == null) {
+            for (Customer _customer : list) {
+                result.add(_customer.getId());
+            }
+            System.out.println(result);
+        }
+        else {
+            for (Customer _customer : list) {
+                Long id = _customer.getId();
+                String str = id.toString();
+                boolean has = true;
+                for (int i = 0; i < idStr.length(); i++) {
+                    if (idStr.charAt(i) != str.charAt(i)) {
+                        has = false;
+                    }
+                }
+                if (has) {
+                    result.add(id);
+                }
+            }
+        }
+        
+        return result;
+    }
+
+    /**
+     * 根据给定部分地址列出客户地址列表
+     * 
+     * @param partAddress
+     * @return
+     */
+    @Override
+    public List<String> selectCustomerAddressByGivenStr(CustomerAddress customerAddress) {
+        List<String> result = new ArrayList<String>();
+        if (customerAddress.getCustomerId() == null)
+            return result;
+        List<CustomerAddress> list = customerAddressMapper.selectCustomerAddressListLikeAddress(customerAddress);
+        for (CustomerAddress item : list) {
+            result.add(item.getCustomerAddress());
+        }
+        return result;
     }
 }

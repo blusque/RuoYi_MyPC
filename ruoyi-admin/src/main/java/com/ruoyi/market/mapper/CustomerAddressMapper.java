@@ -1,7 +1,7 @@
-package com.ruoyi.system.mapper;
+package com.ruoyi.market.mapper;
 
 import java.util.List;
-import com.ruoyi.system.domain.CustomerAddress;
+import com.ruoyi.market.domain.CustomerAddress;
 
 /**
  * 客户地址Mapper接口
@@ -25,6 +25,14 @@ public interface CustomerAddressMapper {
      * @return 客户地址集合
      */
     public List<CustomerAddress> selectCustomerAddressList(CustomerAddress customerAddress);
+
+    /**
+     * 查询客户地址列表
+     * 
+     * @param customerAddress 客户地址
+     * @return 客户地址集合
+     */
+    public List<CustomerAddress> selectCustomerAddressListLikeAddress(CustomerAddress customerAddress);
 
     /**
      * 新增客户地址

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询销售订单列表
 export function listOrder(data) {
   return request({
-    url: '/system/order/list',
+    url: '/market/order/list',
     method: 'put',
     data: data
   })
@@ -12,7 +12,7 @@ export function listOrder(data) {
 // 查询销售订单列表
 export function listOrderDetail(query) {
   return request({
-    url: '/system/order/list/detail',
+    url: '/market/order/list/detail',
     method: 'get',
     params: query
   })
@@ -21,7 +21,7 @@ export function listOrderDetail(query) {
 // 查询销售订单列表
 export function listCancelDetail(query) {
   return request({
-    url: '/system/order/list/cancel',
+    url: '/market/order/list/cancel',
     method: 'get',
     params: query
   })
@@ -30,7 +30,7 @@ export function listCancelDetail(query) {
 // 查询销售订单详细
 export function getOrder(id) {
   return request({
-    url: '/system/order/' + id,
+    url: '/market/order/' + id,
     method: 'get'
   })
 }
@@ -38,7 +38,7 @@ export function getOrder(id) {
 // 查询销售订单详细
 export function getOrderList(ids) {
   return request({
-    url: '/system/order/' + ids,
+    url: '/market/order/' + ids,
     method: 'get'
   })
 }
@@ -46,7 +46,7 @@ export function getOrderList(ids) {
 // 新增销售订单
 export function addOrder(data) {
   return request({
-    url: '/system/order',
+    url: '/market/order',
     method: 'post',
     data: data
   })
@@ -55,7 +55,7 @@ export function addOrder(data) {
 // 新增销售订单明细
 export function addOrderDetail(data) {
   return request({
-    url: '/system/order/detail',
+    url: '/market/order/detail',
     method: 'post',
     data: data
   })
@@ -64,7 +64,7 @@ export function addOrderDetail(data) {
 // 新增销售退货明细
 export function addCancelDetail(data) {
   return request({
-    url: '/system/order/cancel',
+    url: '/market/order/cancel',
     method: 'post',
     data: data
   })
@@ -73,7 +73,7 @@ export function addCancelDetail(data) {
 // 修改销售订单
 export function updateOrder(data) {
   return request({
-    url: '/system/order',
+    url: '/market/order',
     method: 'put',
     data: data
   })
@@ -82,7 +82,7 @@ export function updateOrder(data) {
 // 修改销售订单
 export function updateOrderDetail(data) {
   return request({
-    url: '/system/order/detail',
+    url: '/market/order/detail',
     method: 'put',
     data: data
   })
@@ -91,7 +91,7 @@ export function updateOrderDetail(data) {
 // 修改销售订单
 export function updateCancelDetail(data) {
   return request({
-    url: '/system/order/cancel',
+    url: '/market/order/cancel',
     method: 'put',
     data: data
   })
@@ -100,21 +100,21 @@ export function updateCancelDetail(data) {
 // 删除销售订单
 export function delOrder(ids) {
   return request({
-    url: '/system/order/' + ids,
+    url: '/market/order/' + ids,
     method: 'delete'
   })
 }
 
 export function delOrderDetail(ids) {
   return request({
-    url: '/system/order/detail/' + ids,
+    url: '/market/order/detail/' + ids,
     method: 'delete'
   })
 }
 
 export function delCancelDetail(ids) {
   return request({
-    url: '/system/order/cancel/' + ids,
+    url: '/market/order/cancel/' + ids,
     method: 'delete'
   })
 }

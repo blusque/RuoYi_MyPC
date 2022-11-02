@@ -1,8 +1,8 @@
-package com.ruoyi.system.service;
+package com.ruoyi.market.service;
 
 import java.util.List;
-import com.ruoyi.system.domain.Customer;
-import com.ruoyi.system.domain.CustomerAddress;
+import com.ruoyi.market.domain.Customer;
+import com.ruoyi.market.domain.CustomerAddress;
 
 /**
  * 客户管理Service接口
@@ -98,4 +98,20 @@ public interface ICustomerService {
      * @return 结果
      */
     public int deleteCustomerAddress(CustomerAddress customerAddress);
+
+    /**
+     * 根据给定数字列出客户编号列表
+     * 
+     * @param partId
+     * @return
+     */
+    public List<Long> selectCustomerIdsByGivenNum(Customer customer);
+
+    /**
+     * 根据给定部分地址列出客户地址列表
+     * 
+     * @param partAddress
+     * @return
+     */
+    public List<String> selectCustomerAddressByGivenStr(CustomerAddress customerAddress);
 }

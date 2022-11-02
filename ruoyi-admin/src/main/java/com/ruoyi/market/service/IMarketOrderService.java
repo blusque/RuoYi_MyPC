@@ -1,9 +1,9 @@
-package com.ruoyi.system.service;
+package com.ruoyi.market.service;
 
 import java.util.List;
-import com.ruoyi.system.domain.MarketOrder;
-import com.ruoyi.system.domain.MarketCancelDetail;
-import com.ruoyi.system.domain.MarketOrderDetail;
+import com.ruoyi.market.domain.MarketOrder;
+import com.ruoyi.market.domain.MarketCancelDetail;
+import com.ruoyi.market.domain.MarketOrderDetail;
 
 /**
  * 销售订单Service接口
@@ -147,4 +147,6 @@ public interface IMarketOrderService {
      * @return 结果
      */
     public int deleteMarketCancelDetailById(Long id);
+
+    public void dailyCheckOrderStatus();
 }

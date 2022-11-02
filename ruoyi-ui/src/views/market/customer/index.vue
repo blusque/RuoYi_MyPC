@@ -96,19 +96,20 @@
         <el-form-item label="客户邮件" prop="email">
           <el-input v-model="form.email" placeholder="请输入客户邮件" />
         </el-form-item>
-        <el-form-item label="客户评级">
+        <el-form-item label="客户评级" prop="customerLevel">
           <el-radio-group v-model="form.customerLevel">
             <el-radio v-for="dict in dict.type.customer_level" :key="dict.label" :label="dict.label">{{ dict.label }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="客户标签">
+        <el-form-item label="客户标签" prop="customerTags">
           <el-radio-group v-model="form.customerTags">
             <el-radio v-for="dict in dict.type.customer_tag" :key="dict.value" :label="dict.value">{{ dict.label }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-divider content-position="center">客户地址信息</el-divider>
+        <el-form-item label="客户地址信息" label-width="110px" prop="customerAddressList">
+        </el-form-item>
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddCustomerAddress">添加</el-button>
@@ -143,8 +144,8 @@
         <el-button type="primary" @click="handleAddressAddConfirm">确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog v-bind="$attr" v-on="$listeners" title="显示客户地址"
-      :visible.sync="open.showAddress" width="500px" append-to-body :show-close="false">
+    <el-dialog v-bind="$attr" v-on="$listeners" title="显示客户地址" :visible.sync="open.showAddress" width="500px"
+      append-to-body :show-close="false">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddCustomerAddress">添加</el-button>
@@ -249,7 +250,6 @@ export default {
         }],
         // customerAddressList: [{
         //   required: true,
-        //   message: "客户地址不能为空",
         //   tigger: "blur"
         // }]
       },
@@ -372,6 +372,10 @@ export default {
           } else if (this.form.customerLevel === levels[2]) {
             this.form.customerLevel = 0.3;
             console.log(this.form);
+          }
+          if (this.customerAddressList.length === 0) {
+            this.$modal.msgError("请输入合法的地址");
+            return;
           }
           this.form.customerAddressList = this.customerAddressList;
           console.log(this.form);

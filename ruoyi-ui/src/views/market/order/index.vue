@@ -118,15 +118,22 @@
             </el-radio>
           </el-radio-group>
         </el-form-item> -->
-        <el-form-item label="客户编号" prop="customerId">
-          <el-input v-model="form.customerId" placeholder="请输入客户编号" />
+        <el-form-item v-if="isAdd" label="客户编号" prop="customerId">
+          <!-- <el-input v-model="form.customerId" placeholder="请输入客户编号" /> -->
+          <el-autocomplete v-model="form.customerId" :fetch-suggestions="querySearchId" placeholder="Please input"
+            @select="handleSelect" />
         </el-form-item>
         <el-form-item label="送货地址" prop="address">
-          <el-input v-model="form.address" type="textarea" placeholder="请输入内容" />
+          <!-- <el-input v-model="form.address" type="textarea" placeholder="请输入内容" /> -->
+          <el-autocomplete v-model="form.address" :fetch-suggestions="querySearchAddress" placeholder="Please input"
+            @select="handleSelect" />
         </el-form-item>
-        <el-form-item label="销售员编号" prop="staffId" label-width="100px">
-          <el-input v-model="form.staffId" placeholder="请输入销售员编号" />
+        <el-form-item v-if="isAdd" label="销售员编号" prop="staffId" label-width="100px">
+          <!-- <el-input v-model="form.staffId" placeholder="请输入销售员编号" /> -->
+          <el-autocomplete v-model="form.staffId" :fetch-suggestions="querySearchStaffId" placeholder="Please input"
+            @select="handleSelect" />
         </el-form-item>
+        <br v-if="isAdd" />
         <el-divider v-if="isAdd" content-position="center">订单明细</el-divider>
         <div v-if="isAdd">
           <el-row :gutter="10" class="mb8">
@@ -154,7 +161,7 @@
     </el-dialog>
 
     <el-dialog :visible.sync="open.addOrderDetail" v-bind="$attrs" v-on="$listeners" @open="onAddOrderDetailOpen"
-      @close="onAddOrderDetailClose" :title="title">
+      @close="onAddOrderDetailClose" :title="title" :show-close="false">
       <el-form ref="orderAddForm" :model="orderDetailData" :rules="orderDetailRules" size="medium" label-width="100px">
         <el-form-item label="物料编号" prop="materialId">
           <el-input v-model="orderDetailData.materialId" placeholder="请输入物料编号" clearable :style="{ width: '100%' }">
@@ -201,7 +208,7 @@
     </el-dialog>
 
     <el-dialog :visible.sync="open.addCancelDetail" v-bind="$attrs" v-on="$listeners" @open="onAddCancelDetailOpen"
-      @close="onAddCancelDetailClose" :title="title">
+      @close="onAddCancelDetailClose" :title="title" :show-close="false">
       <el-form ref="cancelAddForm" :model="cancelDetailData" :rules="cancelDetailRules" size="medium"
         label-width="100px">
         <el-form-item label="物料编号" prop="materialId">
@@ -239,25 +246,65 @@ import {
 } from "@/api/system/order";
 
 import {
-  listCustomer,
-  listCustomerAddress
-} from "@/api/sytem/customer"
+  listCustomerIdByNum,
+  listCustomerAddressByStr
+} from "@/api/system/customer"
+
+import {
+  listUser
+} from "@/api/system/user"
 
 export default {
   name: "Order",
   dicts: ['market_order_status'],
   data() {
+    const cancelNumCheck = (rule, value, cb) => {
+      if (!value) {
+        cb(new Error('请输入产品数量'));
+        return;
+      }
+      if (Number(value) > Number(this.tempMarketOrder.number)) {
+        console.log(`最大数目为${this.tempMarketOrder.number}`);
+        cb(new Error(`最大数目为${this.tempMarketOrder.number}`));
+      } else {
+        cb();
+      }
+    }
+    const cancelIdCheck = (rule, value, cb) => {
+      if (!value) {
+        cb(new Error('请输入产品编号'));
+        return;
+      }
+      let obj = {
+        orderId: this.nowId,
+        materialId: this.cancelDetailData.materialId
+      };
+      console.log(obj);
+      listOrderDetail(obj).then(response => {
+        console.log(response);
+        if (response.rows.length == 0) {
+          cb(new Error("请输入此订单未涉及该产品"))
+        } else {
+          this.tempMarketOrder = response.rows[0];
+          cb();
+        }
+      })
+    }
     return {
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
-      // 客户编号列表
-      customerIds: [],
-      // 销售员编号列表
-      staffIds: [],
-      // 物料编号列表
-      materialIds: [],
+      // 选中客户
+      customerId: [],
+      // 检查时订单列表
+      tempMarketOrder: [],
+      // // 客户编号列表
+      // customerIds: [],
+      // // 销售员编号列表
+      // staffIds: [],
+      // // 物料编号列表
+      // materialIds: [],
       // TODO： 完成后端查询
       // 当前编号
       nowId: null,
@@ -280,6 +327,11 @@ export default {
         cancelDetail: false,
         addOrderDetail: false,
         addCancelDetail: false
+      },
+      isValid: {
+        customerId: true,
+        materialId: true,
+        staffId: true
       },
       // 父级窗口
       parentDialog: 'main',
@@ -355,13 +407,13 @@ export default {
       cancelDetailRules: {
         materialId: [{
           required: true,
-          message: '请输入物料编号',
-          trigger: 'blur'
+          trigger: 'blur',
+          validator: cancelIdCheck
         }],
         number: [{
           required: true,
-          message: '数量',
-          trigger: 'blur'
+          trigger: 'blur',
+          validator: cancelNumCheck
         }],
       },
       customerInfo: {
@@ -461,6 +513,61 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
+    querySearchId(queryString, cb) {
+      let query = {
+        id: queryString ? Number(queryString) : null
+      };
+      console.log(query);
+      let results = [];
+      listCustomerIdByNum(query).then(response => {
+        console.log(response);
+        response.rows.forEach(item => {
+          results.push({ value: String(item) });
+        });
+        if (results.length == 0) {
+          this.isValid.customerId = false;
+        }
+        console.log(results);
+        // TODO: return result;
+        cb(results);
+      });
+    },
+    querySearchAddress(queryString, cb) {
+      let query = {
+        customerId: this.form.customerId,
+        customerAddress: this.form.address
+      };
+      let results = [];
+      listCustomerAddressByStr(query).then(response => {
+        response.rows.forEach(item => {
+          results.push({ value: item });
+        });
+        console.log(results);
+        // TODO: return result;
+        cb(results);
+      });
+    },
+    querySearchStaffId(queryString, cb) {
+      let query = {
+        deptId: 103
+      }
+      let results = [];
+      listUser(query).then(response => {
+        response.rows.forEach(item => {
+          results.push({ value: String(item.userId) });
+        });
+      });
+      results = queryString ? results.filter(this.createFilter(queryString)) : results;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (item) => {
+        return item.value.match(queryString);
+      };
+    },
+    handleSelect() {
+
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
@@ -553,6 +660,7 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+      this.title = "查看订单明细";
       this.openOrderDetail();
     },
     /** 导出按钮操作 */
@@ -607,7 +715,6 @@ export default {
       this.onAddOrderDetailClose();
       console.log(this.open.addOrderDetail);
       this.open.addOrderDetail = false;
-      this.marketOrderDetailList = [];
     },
     handleAddOrderDetailConfirm() {
       this.$refs['orderAddForm'].validate(valid => {
@@ -638,7 +745,8 @@ export default {
         console.log(this.marketCancelDetailList);
         this.total = response.total;
         this.loading = false;
-      })
+      });
+      this.title = "查看退货明细";
       this.openCancelDetail();
     },
     onCancelDetailOpen() {
@@ -651,7 +759,6 @@ export default {
       this.onAddCancelDetailClose();
       console.log(this.open.addCancelDetail);
       this.open.addCancelDetail = false;
-      this.marketCancelDetailList = [];
     },
     handleAddCancelDetailConfirm() {
       this.$refs['cancelAddForm'].validate(valid => {
@@ -675,7 +782,22 @@ export default {
     },
     submitCancelForm() {
       // TODO: submit cancelDetail submit
-      addCancelDetail(this.marketCancelDetailList).then(response => {
+      let obj = {
+        id: this.nowId
+      }
+      listOrder(obj).then(response => {
+        obj = response.data[0];
+        if (obj.status === '0') {
+          obj.status = '3';
+        } else {
+          obj.status = '4';
+        }
+        console.log(obj);
+        updateOrder(obj).then(response => {
+          console.log(response);
+        })
+      })
+      updateCancelDetail(this.marketCancelDetailList).then(response => {
         this.$modal.msgSuccess("新增成功");
         this.open.cancelDetail = false;
         this.getList();

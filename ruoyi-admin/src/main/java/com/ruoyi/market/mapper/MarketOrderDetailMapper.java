@@ -1,7 +1,7 @@
-package com.ruoyi.system.mapper;
+package com.ruoyi.market.mapper;
 
 import java.util.List;
-import com.ruoyi.system.domain.MarketOrderDetail;
+import com.ruoyi.market.domain.MarketOrderDetail;
 
 /**
  * 订单明细Mapper接口

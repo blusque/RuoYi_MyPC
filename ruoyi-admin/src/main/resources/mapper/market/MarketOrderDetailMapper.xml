@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.system.mapper.MarketOrderDetailMapper">
+<mapper namespace="com.ruoyi.market.mapper.MarketOrderDetailMapper">
     
     <resultMap type="MarketOrderDetail" id="MarketOrderDetailResult">
         <result property="id"    column="id"    />
@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <delete id="deleteMarketOrderDetailByOrderIds" parameterType="String">
         delete from market_order_detail where order_id in
-        <foreach collection="array" open="(" separator="," close=")">
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
             #{orderId}
         </foreach>
     </delete>

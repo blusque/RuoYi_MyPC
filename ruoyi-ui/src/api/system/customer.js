@@ -3,7 +3,15 @@ import request from '@/utils/request'
 // 查询客户管理列表
 export function listCustomer(query) {
   return request({
-    url: '/system/customer/list',
+    url: '/market/customer/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function listCustomerIdByNum(query) {
+  return request({
+    url: '/market/customer/list/q',
     method: 'get',
     params: query
   })
@@ -11,7 +19,15 @@ export function listCustomer(query) {
 
 export function listCustomerAddress(query) {
   return request({
-    url: '/system/customer/address/list',
+    url: '/market/customer/address/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function listCustomerAddressByStr(query) {
+  return request({
+    url: '/market/customer/address/list/q',
     method: 'get',
     params: query
   })
@@ -20,7 +36,7 @@ export function listCustomerAddress(query) {
 // 查询客户管理详细
 export function getCustomer(id) {
   return request({
-    url: '/system/customer/list/' + id,
+    url: '/market/customer/list/' + id,
     method: 'get'
   })
 }
@@ -28,7 +44,7 @@ export function getCustomer(id) {
 // 查询客户地址
 export function getCustomerAddress(id) {
   return request({
-    url: '/system/customer/address/list/' + id,
+    url: '/market/customer/address/list/' + id,
     method: 'get'
   })
 }
@@ -36,7 +52,7 @@ export function getCustomerAddress(id) {
 // 新增客户管理
 export function addCustomer(data) {
   return request({
-    url: '/system/customer',
+    url: '/market/customer',
     method: 'post',
     data: data
   })
@@ -45,7 +61,7 @@ export function addCustomer(data) {
 // 新增客户地址
 export function addCustomerAddress(data) {
   return request({
-    url: '/system/customer/address',
+    url: '/market/customer/address',
     method: 'post',
     data: data
   })
@@ -54,7 +70,7 @@ export function addCustomerAddress(data) {
 // 编辑客户管理
 export function updateCustomer(data) {
   return request({
-    url: '/system/customer',
+    url: '/market/customer',
     method: 'put',
     data: data
   })
@@ -63,7 +79,7 @@ export function updateCustomer(data) {
 // 编辑客户地址
 export function updateCustomerAddress(data) {
   return request({
-    url: '/system/customer/address',
+    url: '/market/customer/address',
     method: 'put',
     data: data
   })
@@ -72,7 +88,7 @@ export function updateCustomerAddress(data) {
 // 删除客户管理
 export function delCustomer(id) {
   return request({
-    url: '/system/customer/' + id,
+    url: '/market/customer/' + id,
     method: 'delete'
   })
 }
@@ -80,7 +96,7 @@ export function delCustomer(id) {
 // 批量删除客户管理
 export function delCustomerList(ids) {
   return request({
-    url: '/system/customer',
+    url: '/market/customer',
     method: 'delete',
     params: ids
   })
@@ -89,7 +105,7 @@ export function delCustomerList(ids) {
 // 删除客户地址
 export function delCustomerAddress(data) {
   return request({
-    url: '/system/customer',
+    url: '/market/customer',
     method: 'delete',
     data: data
   })

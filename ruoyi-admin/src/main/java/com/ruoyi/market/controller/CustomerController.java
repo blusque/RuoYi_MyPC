@@ -1,4 +1,4 @@
-package com.ruoyi.system.controller;
+package com.ruoyi.market.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -16,9 +16,9 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Customer;
-import com.ruoyi.system.domain.CustomerAddress;
-import com.ruoyi.system.service.ICustomerService;
+import com.ruoyi.market.domain.Customer;
+import com.ruoyi.market.domain.CustomerAddress;
+import com.ruoyi.market.service.ICustomerService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2022-10-27
  */
 @RestController
-@RequestMapping("/system/customer")
+@RequestMapping("/market/customer")
 public class CustomerController extends BaseController
 {
     @Autowired
@@ -52,10 +52,28 @@ public class CustomerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:customer:list')")
     @GetMapping("/address/list")
-    public TableDataInfo list(CustomerAddress customerAddress)
+    public TableDataInfo listAddress(CustomerAddress customerAddress)
     {
         // startPage();
         List<CustomerAddress> list = customerService.selectCustomerAddressList(customerAddress);
+        return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('system:customer:list')")
+    @GetMapping("/list/q")
+    public TableDataInfo listByGivenNum(Customer customer)
+    {
+        // startPage();
+        List<Long> list = customerService.selectCustomerIdsByGivenNum(customer);
+        return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('system:customer:list')")
+    @GetMapping("/address/list/q")
+    public TableDataInfo listAddressByGivenStr(CustomerAddress customerAddress)
+    {
+        // startPage();
+        List<String> list = customerService.selectCustomerAddressByGivenStr(customerAddress);
         return getDataTable(list);
     }
 

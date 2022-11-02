@@ -1,7 +1,7 @@
-package com.ruoyi.system.mapper;
+package com.ruoyi.market.mapper;
 
 import java.util.List;
-import com.ruoyi.system.domain.Customer;
+import com.ruoyi.market.domain.Customer;
 
 /**
  * 客户管理Mapper接口
@@ -18,6 +18,14 @@ public interface CustomerMapper
 	 * @return 客户管理
 	 */
 	public Customer selectCustomerById(Long id);
+
+	/**
+	 * 查询编号大于给定编号的客户
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public List<Customer> selectCustomerByLargerThanId(Long id);
 
 	/**
 	 * 查询客户管理列表

@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.market.domain;
 
 import java.util.Date;
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.ruoyi.system.mapper;
+package com.ruoyi.market.mapper;
 
 import java.util.List;
-import com.ruoyi.system.domain.MarketCancelDetail;
+import com.ruoyi.market.domain.MarketCancelDetail;
 
 /**
  * 退货明细Mapper接口
