@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysMaterialMapper">
+    
+    <resultMap type="SysMaterial" id="SysMaterialResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="from"    column="from"    />
+        <result property="duration"    column="duration"    />
+    </resultMap>
+
+    <sql id="selectSysMaterialVo">
+        select id, name, `from`, duration from sys_bom
+    </sql>
+
+    <select id="selectSysMaterialList" parameterType="SysMaterial" resultMap="SysMaterialResult">
+        <include refid="selectSysMaterialVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="from != null  and from != ''"> and `from` = #{from}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysMaterialById" parameterType="Long" resultMap="SysMaterialResult">
+        <include refid="selectSysMaterialVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysMaterial" parameterType="SysMaterial" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_mater
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="from != null and from != ''">`from`,</if>
+            <if test="duration != null">duration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="from != null and from != ''">#{from},</if>
+            <if test="duration != null">#{duration},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysMaterial" parameterType="SysMaterial">
+        update sys_mater
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="from != null and from != ''">`from` = #{from},</if>
+            <if test="duration != null">duration = #{duration},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysMaterialById" parameterType="Long">
+        delete from sys_mater where id = #{id}
+    </delete>
+
+    <delete id="deleteSysMaterialByIds" parameterType="String">
+        delete from sys_mater where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

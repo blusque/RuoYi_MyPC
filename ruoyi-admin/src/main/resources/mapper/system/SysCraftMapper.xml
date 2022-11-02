@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysCraftMapper">
+    
+    <resultMap type="SysCraft" id="SysCraftResult">
+        <result property="id"    column="id"    />
+        <result property="craftName"    column="craft_name"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="factoryId"    column="factory_id"    />
+    </resultMap>
+
+    <sql id="selectSysCraftVo">
+        select id, craft_name, material_id, parent_id, duration, factory_id from sys_craft
+    </sql>
+
+    <select id="selectSysCraftList" parameterType="SysCraft" resultMap="SysCraftResult">
+        <include refid="selectSysCraftVo"/>
+        <where>  
+            <if test="craftName != null  and craftName != ''"> and craft_name like concat('%', #{craftName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysCraftById" parameterType="Long" resultMap="SysCraftResult">
+        <include refid="selectSysCraftVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysCraft" parameterType="SysCraft" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_craft
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="craftName != null and craftName != ''">craft_name,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="duration != null">duration,</if>
+            <if test="factoryId != null">factory_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="craftName != null and craftName != ''">#{craftName},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="factoryId != null">#{factoryId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysCraft" parameterType="SysCraft">
+        update sys_craft
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="craftName != null and craftName != ''">craft_name = #{craftName},</if>
+            <if test="materialId != null">material_id = #{materialId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="factoryId != null">factory_id = #{factoryId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCraftById" parameterType="Long">
+        delete from sys_craft where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCraftByIds" parameterType="String">
+        delete from sys_craft where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
