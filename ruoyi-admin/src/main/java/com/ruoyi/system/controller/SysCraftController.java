@@ -19,13 +19,12 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.SysCraft;
 import com.ruoyi.system.service.ISysCraftService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 工艺管理Controller
+ * 工艺Controller
  * 
  * @author ruoyi
- * @date 2022-10-29
+ * @date 2022-11-02
  */
 @RestController
 @RequestMapping("/system/craft")
@@ -35,32 +34,31 @@ public class SysCraftController extends BaseController
     private ISysCraftService sysCraftService;
 
     /**
-     * 查询工艺管理列表
+     * 查询工艺列表
      */
     @PreAuthorize("@ss.hasPermi('system:craft:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysCraft sysCraft)
+    public AjaxResult list(SysCraft sysCraft)
     {
-        startPage();
         List<SysCraft> list = sysCraftService.selectSysCraftList(sysCraft);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     /**
-     * 导出工艺管理列表
+     * 导出工艺列表
      */
     @PreAuthorize("@ss.hasPermi('system:craft:export')")
-    @Log(title = "工艺管理", businessType = BusinessType.EXPORT)
+    @Log(title = "工艺", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysCraft sysCraft)
     {
         List<SysCraft> list = sysCraftService.selectSysCraftList(sysCraft);
         ExcelUtil<SysCraft> util = new ExcelUtil<SysCraft>(SysCraft.class);
-        util.exportExcel(response, list, "工艺管理数据");
+        util.exportExcel(response, list, "工艺数据");
     }
 
     /**
-     * 获取工艺管理详细信息
+     * 获取工艺详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:craft:query')")
     @GetMapping(value = "/{id}")
@@ -70,10 +68,10 @@ public class SysCraftController extends BaseController
     }
 
     /**
-     * 新增工艺管理
+     * 新增工艺
      */
     @PreAuthorize("@ss.hasPermi('system:craft:add')")
-    @Log(title = "工艺管理", businessType = BusinessType.INSERT)
+    @Log(title = "工艺", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysCraft sysCraft)
     {
@@ -81,10 +79,10 @@ public class SysCraftController extends BaseController
     }
 
     /**
-     * 修改工艺管理
+     * 修改工艺
      */
     @PreAuthorize("@ss.hasPermi('system:craft:edit')")
-    @Log(title = "工艺管理", businessType = BusinessType.UPDATE)
+    @Log(title = "工艺", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysCraft sysCraft)
     {
@@ -92,10 +90,10 @@ public class SysCraftController extends BaseController
     }
 
     /**
-     * 删除工艺管理
+     * 删除工艺
      */
     @PreAuthorize("@ss.hasPermi('system:craft:remove')")
-    @Log(title = "工艺管理", businessType = BusinessType.DELETE)
+    @Log(title = "工艺", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

@@ -4,55 +4,55 @@ import java.util.List;
 import com.ruoyi.system.domain.SysCraft;
 
 /**
- * 工艺管理Mapper接口
+ * 工艺Mapper接口
  * 
  * @author ruoyi
- * @date 2022-10-29
+ * @date 2022-11-02
  */
 public interface SysCraftMapper 
 {
     /**
-     * 查询工艺管理
+     * 查询工艺
      * 
-     * @param id 工艺管理主键
-     * @return 工艺管理
+     * @param id 工艺主键
+     * @return 工艺
      */
     public SysCraft selectSysCraftById(Long id);
 
     /**
-     * 查询工艺管理列表
+     * 查询工艺列表
      * 
-     * @param sysCraft 工艺管理
-     * @return 工艺管理集合
+     * @param sysCraft 工艺
+     * @return 工艺集合
      */
     public List<SysCraft> selectSysCraftList(SysCraft sysCraft);
 
     /**
-     * 新增工艺管理
+     * 新增工艺
      * 
-     * @param sysCraft 工艺管理
+     * @param sysCraft 工艺
      * @return 结果
      */
     public int insertSysCraft(SysCraft sysCraft);
 
     /**
-     * 修改工艺管理
+     * 修改工艺
      * 
-     * @param sysCraft 工艺管理
+     * @param sysCraft 工艺
      * @return 结果
      */
     public int updateSysCraft(SysCraft sysCraft);
 
     /**
-     * 删除工艺管理
+     * 删除工艺
      * 
-     * @param id 工艺管理主键
+     * @param id 工艺主键
      * @return 结果
      */
     public int deleteSysCraftById(Long id);
 
     /**
-     * 批量删除工艺管理
+     * 批量删除工艺
      * 
      * @param ids 需要删除的数据主键集合
      * @return 结果

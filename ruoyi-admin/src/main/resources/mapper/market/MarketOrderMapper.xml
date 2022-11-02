@@ -43,12 +43,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </select>
 
-    <select id="selectMarketOrderListByDate" parameterType="Long" resultMap="MarketOrderResult">
+    <select id="selectMarketOrderListByDate" parameterType="Integer" resultMap="MarketOrderResult">
         <include refid="selectMarketOrderVo" />
         where TO_DAYS(now()) - TO_DAYS(date) &lt;= #{duration}
     </select>
 
-    <select id="selectMarketOrderListByDDL" parameterType="Long" resultMap="MarketOrderResult">
+    <select id="selectMarketOrderListByDDL" parameterType="Integer" resultMap="MarketOrderResult">
         <include refid="selectMarketOrderVo" />
         where TO_DAYS(ddl) - TO_DAYS(now()) &lt;= #{duration}
     </select>

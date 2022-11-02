@@ -7,12 +7,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="SysMaterial" id="SysMaterialResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
+        <result property="property"    column="property"    />
         <result property="from"    column="from"    />
         <result property="duration"    column="duration"    />
     </resultMap>
 
     <sql id="selectSysMaterialVo">
-        select id, name, `from`, duration from sys_bom
+        select id, name, property, `from`, duration from sys_bom
     </sql>
 
     <select id="selectSysMaterialList" parameterType="SysMaterial" resultMap="SysMaterialResult">
@@ -29,13 +30,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertSysMaterial" parameterType="SysMaterial" useGeneratedKeys="true" keyProperty="id">
-        insert into sys_mater
+        insert into sys_bom
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="property != null and property != ''">property,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="from != null and from != ''">`from`,</if>
             <if test="duration != null">duration,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="property != null and property != ''">#{property},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="from != null and from != ''">#{from},</if>
             <if test="duration != null">#{duration},</if>
@@ -43,8 +46,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateSysMaterial" parameterType="SysMaterial">
-        update sys_mater
+        update sys_bom
         <trim prefix="SET" suffixOverrides=",">
+            <if test="property != null and property != ''">property = #{property},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="from != null and from != ''">`from` = #{from},</if>
             <if test="duration != null">duration = #{duration},</if>
@@ -53,11 +57,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSysMaterialById" parameterType="Long">
-        delete from sys_mater where id = #{id}
+        delete from sys_bom where id = #{id}
     </delete>
 
     <delete id="deleteSysMaterialByIds" parameterType="String">
-        delete from sys_mater where id in 
+        delete from sys_bom where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

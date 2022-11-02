@@ -1,6 +1,7 @@
 package com.ruoyi.market.service;
 
 import java.util.List;
+import com.ruoyi.market.domain.FromTo;
 import com.ruoyi.market.domain.MarketOrder;
 import com.ruoyi.market.domain.MarketCancelDetail;
 import com.ruoyi.market.domain.MarketOrderDetail;
@@ -35,6 +36,9 @@ public interface IMarketOrderService {
      * @return 销售订单集合
      */
     public List<MarketOrder> selectMarketOrderList(MarketOrder marketOrder);
+
+
+    public List<MarketOrder> selectMarketOrderListFromTo(FromTo fromTo);
 
     /**
      * 新增销售订单

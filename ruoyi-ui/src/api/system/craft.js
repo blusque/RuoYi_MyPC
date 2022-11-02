@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询工艺管理列表
+// 查询工艺列表
 export function listCraft(query) {
   return request({
     url: '/system/craft/list',
@@ -9,7 +9,7 @@ export function listCraft(query) {
   })
 }
 
-// 查询工艺管理详细
+// 查询工艺详细
 export function getCraft(id) {
   return request({
     url: '/system/craft/' + id,
@@ -17,7 +17,7 @@ export function getCraft(id) {
   })
 }
 
-// 新增工艺管理
+// 新增工艺
 export function addCraft(data) {
   return request({
     url: '/system/craft',
@@ -26,7 +26,7 @@ export function addCraft(data) {
   })
 }
 
-// 修改工艺管理
+// 修改工艺
 export function updateCraft(data) {
   return request({
     url: '/system/craft',
@@ -35,7 +35,7 @@ export function updateCraft(data) {
   })
 }
 
-// 删除工艺管理
+// 删除工艺
 export function delCraft(id) {
   return request({
     url: '/system/craft/' + id,
