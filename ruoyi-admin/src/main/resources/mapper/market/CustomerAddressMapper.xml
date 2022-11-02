@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.CustomerAddressMapper">
+    
+    <resultMap type="CustomerAddress" id="CustomerAddressResult">
+        <result property="customerId"    column="customer_id"    />
+        <result property="customerAddress"    column="customer_address"    />
+    </resultMap>
+
+    <sql id="selectCustomerAddressVo">
+        select customer_id, customer_address from customer_address
+    </sql>
+
+    <select id="selectCustomerAddressList" parameterType="CustomerAddress" resultMap="CustomerAddressResult">
+        <include refid="selectCustomerAddressVo"/>
+        <where>  
+            <if test="customerAddress != null  and customerAddress != ''"> and customer_id = #{customerId}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomerAddressListLikeAddress" parameterType="CustomerAddress" resultMap="CustomerAddressResult">
+        <include refid="selectCustomerAddressVo"/>
+        <where>  
+            <if test="customerId != null"> and customer_id = #{customerId}</if>
+            <if test="customerAddress != null  and customerAddress != ''"> and customer_address like concat('%', #{customerAddress}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectCustomerAddressListByCustomerId" parameterType="Long" resultMap="CustomerAddressResult">
+        <include refid="selectCustomerAddressVo"/>
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="batchCustomerAddress">
+        insert into customer_address( customer_id, customer_address) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.customerId}, #{item.customerAddress})
+        </foreach>
+    </insert>
+
+    <delete id="deleteCustomerAddress" parameterType="Long">
+        delete from customer_address 
+        where customer_id = #{customerId} and customer_address = #{customerAddress}
+    </delete>
+
+    <delete id="deleteCustomerAddressByCustomerId" parameterType="Long">
+        delete from customer_address where customer_id = #{customerId}
+    </delete>
+
+    <delete id="deleteCustomerAddressByCustomerIds" parameterType="String">
+        delete from customer_address where customer_id in 
+        <foreach item="customerId" collection="array" open="(" separator="," close=")">
+            #{customerId}
+        </foreach>
+    </delete>
+</mapper>
