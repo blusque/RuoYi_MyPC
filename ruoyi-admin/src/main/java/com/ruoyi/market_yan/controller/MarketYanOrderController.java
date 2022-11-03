@@ -16,8 +16,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.market_yan.domain.MarketOrder;
-import com.ruoyi.market_yan.service.IMarketOrderService;
+import com.ruoyi.market_yan.domain.MarketYanOrder;
+import com.ruoyi.market_yan.service.IMarketYanOrderService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -29,20 +29,20 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/market_yan/order")
-public class MarketOrderController extends BaseController
+public class MarketYanOrderController extends BaseController
 {
     @Autowired
-    private IMarketOrderService marketOrderService;
+    private IMarketYanOrderService marketOrderService;
 
     /**
      * 查询订单管理列表
      */
     @PreAuthorize("@ss.hasPermi('market_yan:order:list')")
     @GetMapping("/list")
-    public TableDataInfo list(MarketOrder marketOrder)
+    public TableDataInfo list(MarketYanOrder marketOrder)
     {
         startPage();
-        List<MarketOrder> list = marketOrderService.selectMarketOrderList(marketOrder);
+        List<MarketYanOrder> list = marketOrderService.selectMarketYanOrderList(marketOrder);
         return getDataTable(list);
     }
 
@@ -52,10 +52,10 @@ public class MarketOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('market_yan:order:export')")
     @Log(title = "订单管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, MarketOrder marketOrder)
+    public void export(HttpServletResponse response, MarketYanOrder marketOrder)
     {
-        List<MarketOrder> list = marketOrderService.selectMarketOrderList(marketOrder);
-        ExcelUtil<MarketOrder> util = new ExcelUtil<MarketOrder>(MarketOrder.class);
+        List<MarketYanOrder> list = marketOrderService.selectMarketYanOrderList(marketOrder);
+        ExcelUtil<MarketYanOrder> util = new ExcelUtil<MarketYanOrder>(MarketYanOrder.class);
         util.exportExcel(response, list, "订单管理数据");
     }
 
@@ -66,7 +66,7 @@ public class MarketOrderController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(marketOrderService.selectMarketOrderById(id));
+        return AjaxResult.success(marketOrderService.selectMarketYanOrderById(id));
     }
 
     /**
@@ -75,9 +75,9 @@ public class MarketOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('market_yan:order:add')")
     @Log(title = "订单管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody MarketOrder marketOrder)
+    public AjaxResult add(@RequestBody MarketYanOrder marketOrder)
     {
-        return toAjax(marketOrderService.insertMarketOrder(marketOrder));
+        return toAjax(marketOrderService.insertMarketYanOrder(marketOrder));
     }
 
     /**
@@ -86,9 +86,9 @@ public class MarketOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('market_yan:order:edit')")
     @Log(title = "订单管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody MarketOrder marketOrder)
+    public AjaxResult edit(@RequestBody MarketYanOrder marketOrder)
     {
-        return toAjax(marketOrderService.updateMarketOrder(marketOrder));
+        return toAjax(marketOrderService.updateMarketYanOrder(marketOrder));
     }
 
     /**
@@ -99,6 +99,6 @@ public class MarketOrderController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(marketOrderService.deleteMarketOrderByIds(ids));
+        return toAjax(marketOrderService.deleteMarketYanOrderByIds(ids));
     }
 }

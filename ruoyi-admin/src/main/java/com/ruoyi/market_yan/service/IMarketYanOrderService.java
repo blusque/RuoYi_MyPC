@@ -1,7 +1,7 @@
 package com.ruoyi.market_yan.service;
 
 import java.util.List;
-import com.ruoyi.market_yan.domain.MarketOrder;
+import com.ruoyi.market_yan.domain.MarketYanOrder;
 
 /**
  * 订单管理Service接口
@@ -9,7 +9,7 @@ import com.ruoyi.market_yan.domain.MarketOrder;
  * @author ruoyi
  * @date 2022-11-02
  */
-public interface IMarketOrderService
+public interface IMarketYanOrderService
 {
     /**
      * 查询订单管理
@@ -17,7 +17,7 @@ public interface IMarketOrderService
      * @param id 订单管理主键
      * @return 订单管理
      */
-    public MarketOrder selectMarketOrderById(Long id);
+    public MarketYanOrder selectMarketYanOrderById(Long id);
 
     /**
      * 查询订单管理列表
@@ -25,7 +25,7 @@ public interface IMarketOrderService
      * @param marketOrder 订单管理
      * @return 订单管理集合
      */
-    public List<MarketOrder> selectMarketOrderList(MarketOrder marketOrder);
+    public List<MarketYanOrder> selectMarketYanOrderList(MarketYanOrder marketOrder);
 
     /**
      * 新增订单管理
@@ -33,7 +33,7 @@ public interface IMarketOrderService
      * @param marketOrder 订单管理
      * @return 结果
      */
-    public int insertMarketOrder(MarketOrder marketOrder);
+    public int insertMarketYanOrder(MarketYanOrder marketOrder);
 
     /**
      * 修改订单管理
@@ -41,7 +41,7 @@ public interface IMarketOrderService
      * @param marketOrder 订单管理
      * @return 结果
      */
-    public int updateMarketOrder(MarketOrder marketOrder);
+    public int updateMarketYanOrder(MarketYanOrder marketOrder);
 
     /**
      * 批量删除订单管理
@@ -49,7 +49,7 @@ public interface IMarketOrderService
      * @param ids 需要删除的订单管理主键集合
      * @return 结果
      */
-    public int deleteMarketOrderByIds(Long[] ids);
+    public int deleteMarketYanOrderByIds(Long[] ids);
 
     /**
      * 删除订单管理信息
@@ -57,5 +57,5 @@ public interface IMarketOrderService
      * @param id 订单管理主键
      * @return 结果
      */
-    public int deleteMarketOrderById(Long id);
+    public int deleteMarketYanOrderById(Long id);
 }

@@ -3,9 +3,9 @@ package com.ruoyi.market_yan.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.market_yan.mapper.MarketOrderMapper;
-import com.ruoyi.market_yan.domain.MarketOrder;
-import com.ruoyi.market_yan.service.IMarketOrderService;
+import com.ruoyi.market_yan.mapper.MarketYanOrderMapper;
+import com.ruoyi.market_yan.domain.MarketYanOrder;
+import com.ruoyi.market_yan.service.IMarketYanOrderService;
 
 /**
  * 订单管理Service业务层处理
@@ -14,10 +14,10 @@ import com.ruoyi.market_yan.service.IMarketOrderService;
  * @date 2022-11-02
  */
 @Service
-public class MarketOrderServiceImpl implements IMarketOrderService
+public class MarketYanOrderServiceImpl implements IMarketYanOrderService
 {
     @Autowired
-    private MarketOrderMapper marketOrderMapper;
+    private MarketYanOrderMapper marketOrderMapper;
 
     /**
      * 查询订单管理
@@ -26,9 +26,9 @@ public class MarketOrderServiceImpl implements IMarketOrderService
      * @return 订单管理
      */
     @Override
-    public MarketOrder selectMarketOrderById(Long id)
+    public MarketYanOrder selectMarketYanOrderById(Long id)
     {
-        return marketOrderMapper.selectMarketOrderById(id);
+        return marketOrderMapper.selectMarketYanOrderById(id);
     }
 
     /**
@@ -38,9 +38,9 @@ public class MarketOrderServiceImpl implements IMarketOrderService
      * @return 订单管理
      */
     @Override
-    public List<MarketOrder> selectMarketOrderList(MarketOrder marketOrder)
+    public List<MarketYanOrder> selectMarketYanOrderList(MarketYanOrder marketOrder)
     {
-        return marketOrderMapper.selectMarketOrderList(marketOrder);
+        return marketOrderMapper.selectMarketYanOrderList(marketOrder);
     }
 
     /**
@@ -50,9 +50,9 @@ public class MarketOrderServiceImpl implements IMarketOrderService
      * @return 结果
      */
     @Override
-    public int insertMarketOrder(MarketOrder marketOrder)
+    public int insertMarketYanOrder(MarketYanOrder marketOrder)
     {
-        return marketOrderMapper.insertMarketOrder(marketOrder);
+        return marketOrderMapper.insertMarketYanOrder(marketOrder);
     }
 
     /**
@@ -62,9 +62,9 @@ public class MarketOrderServiceImpl implements IMarketOrderService
      * @return 结果
      */
     @Override
-    public int updateMarketOrder(MarketOrder marketOrder)
+    public int updateMarketYanOrder(MarketYanOrder marketOrder)
     {
-        return marketOrderMapper.updateMarketOrder(marketOrder);
+        return marketOrderMapper.updateMarketYanOrder(marketOrder);
     }
 
     /**
@@ -74,9 +74,9 @@ public class MarketOrderServiceImpl implements IMarketOrderService
      * @return 结果
      */
     @Override
-    public int deleteMarketOrderByIds(Long[] ids)
+    public int deleteMarketYanOrderByIds(Long[] ids)
     {
-        return marketOrderMapper.deleteMarketOrderByIds(ids);
+        return marketOrderMapper.deleteMarketYanOrderByIds(ids);
     }
 
     /**
@@ -86,8 +86,8 @@ public class MarketOrderServiceImpl implements IMarketOrderService
      * @return 结果
      */
     @Override
-    public int deleteMarketOrderById(Long id)
+    public int deleteMarketYanOrderById(Long id)
     {
-        return marketOrderMapper.deleteMarketOrderById(id);
+        return marketOrderMapper.deleteMarketYanOrderById(id);
     }
 }

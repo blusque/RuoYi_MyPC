@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.SysMaterialMapper">
-    
+
     <resultMap type="SysMaterial" id="SysMaterialResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
@@ -18,21 +18,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSysMaterialList" parameterType="SysMaterial" resultMap="SysMaterialResult">
         <include refid="selectSysMaterialVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="from != null  and from != ''"> and `from` = #{from}</if>
         </where>
     </select>
-    
+
     <select id="selectSysMaterialById" parameterType="Long" resultMap="SysMaterialResult">
         <include refid="selectSysMaterialVo"/>
         where id = #{id}
     </select>
 
-    <select id="selectMaxSysMaterialId" resultMap="Long">
+    <select id="selectMaxSysMaterialId">
         select max(id) from sys_bom
     </select>
-        
+
     <insert id="insertSysMaterial" parameterType="SysMaterial" useGeneratedKeys="true" keyProperty="id">
         insert into sys_bom
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysMaterialByIds" parameterType="String">
-        delete from sys_bom where id in 
+        delete from sys_bom where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
