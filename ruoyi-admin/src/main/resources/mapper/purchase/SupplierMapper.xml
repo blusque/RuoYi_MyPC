@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.purchase.mapper.SupplierMapper">
+    
+    <resultMap type="Supplier" id="SupplierResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="tel"    column="tel"    />
+        <result property="email"    column="email"    />
+        <result property="level"    column="level"    />
+        <result property="discount"    column="discount"    />
+        <result property="address"    column="address"    />
+    </resultMap>
+
+    <sql id="selectSupplierVo">
+        select id, name, tel, email, level, discount, address from supplier
+    </sql>
+
+    <select id="selectSupplierList" parameterType="Supplier" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="discount != null "> and discount = #{discount}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+        </where>
+    </select>
+    
+    <select id="selectSupplierById" parameterType="Long" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSupplier" parameterType="Supplier" useGeneratedKeys="true" keyProperty="id">
+        insert into supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="tel != null">tel,</if>
+            <if test="email != null">email,</if>
+            <if test="level != null">level,</if>
+            <if test="discount != null">discount,</if>
+            <if test="address != null and address != ''">address,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="email != null">#{email},</if>
+            <if test="level != null">#{level},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="address != null and address != ''">#{address},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplier" parameterType="Supplier">
+        update supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSupplierById" parameterType="Long">
+        delete from supplier where id = #{id}
+    </delete>
+
+    <delete id="deleteSupplierByIds" parameterType="String">
+        delete from supplier where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

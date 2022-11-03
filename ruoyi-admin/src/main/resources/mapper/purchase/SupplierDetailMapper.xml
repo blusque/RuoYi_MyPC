@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.purchase.mapper.SupplierDetailMapper">
+    
+    <resultMap type="SupplierDetail" id="SupplierDetailResult">
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="productivity"    column="productivity"    />
+        <result property="credits"    column="credits"    />
+        <result property="comprehensivepoints"    column="comprehensivepoints"    />
+    </resultMap>
+
+    <sql id="selectSupplierDetailVo">
+        select supplier_id, material_id, productivity, credits, comprehensivepoints from supplier_detail
+    </sql>
+
+    <select id="selectSupplierDetailList" parameterType="SupplierDetail" resultMap="SupplierDetailResult">
+        <include refid="selectSupplierDetailVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectSupplierDetailBySupplierId" parameterType="Long" resultMap="SupplierDetailResult">
+        <include refid="selectSupplierDetailVo"/>
+        where supplier_id = #{supplierId}
+    </select>
+        
+    <insert id="insertSupplierDetail" parameterType="SupplierDetail">
+        insert into supplier_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null">supplier_id,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="productivity != null">productivity,</if>
+            <if test="credits != null">credits,</if>
+            <if test="comprehensivepoints != null">comprehensivepoints,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null">#{supplierId},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="productivity != null">#{productivity},</if>
+            <if test="credits != null">#{credits},</if>
+            <if test="comprehensivepoints != null">#{comprehensivepoints},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplierDetail" parameterType="SupplierDetail">
+        update supplier_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialId != null">material_id = #{materialId},</if>
+            <if test="productivity != null">productivity = #{productivity},</if>
+            <if test="credits != null">credits = #{credits},</if>
+            <if test="comprehensivepoints != null">comprehensivepoints = #{comprehensivepoints},</if>
+        </trim>
+        where supplier_id = #{supplierId}
+    </update>
+
+    <delete id="deleteSupplierDetailBySupplierId" parameterType="Long">
+        delete from supplier_detail where supplier_id = #{supplierId}
+    </delete>
+
+    <delete id="deleteSupplierDetailBySupplierIds" parameterType="String">
+        delete from supplier_detail where supplier_id in 
+        <foreach item="supplierId" collection="array" open="(" separator="," close=")">
+            #{supplierId}
+        </foreach>
+    </delete>
+</mapper>

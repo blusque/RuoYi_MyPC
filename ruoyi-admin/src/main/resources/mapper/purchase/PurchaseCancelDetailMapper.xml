@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.purchase.mapper.PurchaseCancelDetailMapper">
+    
+    <resultMap type="PurchaseCancelDetail" id="PurchaseCancelDetailResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+    <sql id="selectPurchaseCancelDetailVo">
+        select order_id, material_id, number from purchase_cancel_detail
+    </sql>
+
+    <select id="selectPurchaseCancelDetailList" parameterType="PurchaseCancelDetail" resultMap="PurchaseCancelDetailResult">
+        <include refid="selectPurchaseCancelDetailVo"/>
+        <where>  
+            <if test="number != null "> and number = #{number}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchaseCancelDetailByOrderId" parameterType="Long" resultMap="PurchaseCancelDetailResult">
+        <include refid="selectPurchaseCancelDetailVo"/>
+        where order_id = #{orderId}
+    </select>
+        
+    <insert id="insertPurchaseCancelDetail" parameterType="PurchaseCancelDetail">
+        insert into purchase_cancel_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="number != null">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="number != null">#{number},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurchaseCancelDetail" parameterType="PurchaseCancelDetail">
+        update purchase_cancel_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="number != null">number = #{number},</if>
+        </trim>
+        where order_id = #{orderId} and material_id = #{materialId}
+    </update>
+
+    <delete id="deletePurchaseCancelDetailByOrderId" parameterType="Long">
+        delete from purchase_cancel_detail where order_id = #{orderId}
+    </delete>
+
+    <delete id="deletePurchaseCancelDetailByOrderIds" parameterType="String">
+        delete from purchase_cancel_detail where (order_id, material_id) in 
+        <foreach item="item" collection="array" open="(" separator="," close=")">
+            (#{item.orderId}, #{item.materialId})
+        </foreach>
+    </delete>
+</mapper>
