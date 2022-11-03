@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sc.mapper.PickingListItemsMapper">
+    
+    <resultMap type="PickingListItems" id="PickingListItemsResult">
+        <result property="mrnum"    column="mrnum"    />
+        <result property="materialCode"    column="material_code"    />
+        <result property="quantitydemande"    column="quantitydemande"    />
+        <result property="deliverydate"    column="deliverydate"    />
+    </resultMap>
+
+    <sql id="selectPickingListItemsVo">
+        select mrnum, material_code, quantitydemande, deliverydate from picking_list_items
+    </sql>
+
+    <select id="selectPickingListItemsList" parameterType="PickingListItems" resultMap="PickingListItemsResult">
+        <include refid="selectPickingListItemsVo"/>
+        <where>  
+            <if test="materialCode != null  and materialCode != ''"> and material_code = #{materialCode}</if>
+            <if test="quantitydemande != null "> and quantitydemande = #{quantitydemande}</if>
+            <if test="deliverydate != null "> and deliverydate = #{deliverydate}</if>
+        </where>
+    </select>
+    
+    <select id="selectPickingListItemsByMrnum" parameterType="Long" resultMap="PickingListItemsResult">
+        <include refid="selectPickingListItemsVo"/>
+        where mrnum = #{mrnum}
+    </select>
+        
+    <insert id="insertPickingListItems" parameterType="PickingListItems" useGeneratedKeys="true" keyProperty="mrnum">
+        insert into picking_list_items
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialCode != null and materialCode != ''">material_code,</if>
+            <if test="quantitydemande != null">quantitydemande,</if>
+            <if test="deliverydate != null">deliverydate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialCode != null and materialCode != ''">#{materialCode},</if>
+            <if test="quantitydemande != null">#{quantitydemande},</if>
+            <if test="deliverydate != null">#{deliverydate},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePickingListItems" parameterType="PickingListItems">
+        update picking_list_items
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialCode != null and materialCode != ''">material_code = #{materialCode},</if>
+            <if test="quantitydemande != null">quantitydemande = #{quantitydemande},</if>
+            <if test="deliverydate != null">deliverydate = #{deliverydate},</if>
+        </trim>
+        where mrnum = #{mrnum}
+    </update>
+
+    <delete id="deletePickingListItemsByMrnum" parameterType="Long">
+        delete from picking_list_items where mrnum = #{mrnum}
+    </delete>
+
+    <delete id="deletePickingListItemsByMrnums" parameterType="String">
+        delete from picking_list_items where mrnum in 
+        <foreach item="mrnum" collection="array" open="(" separator="," close=")">
+            #{mrnum}
+        </foreach>
+    </delete>
+</mapper>

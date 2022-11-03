@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sc.mapper.DispatchMapper">
+    
+    <resultMap type="Dispatch" id="DispatchResult">
+        <result property="mcnum"    column="mcnum"    />
+        <result property="wpronum"    column="wpronum"    />
+        <result property="
+productionQuantity"    column="
+production_quantity"    />
+        <result property="tasknum"    column="tasknum"    />
+    </resultMap>
+
+    <sql id="selectDispatchVo">
+        select mcnum, wpronum, 
+production_quantity, tasknum from dispatch
+    </sql>
+
+    <select id="selectDispatchList" parameterType="Dispatch" resultMap="DispatchResult">
+        <include refid="selectDispatchVo"/>
+        <where>  
+            <if test="wpronum != null "> and wpronum = #{wpronum}</if>
+            <if test="
+productionQuantity != null "> and 
+production_quantity = #{
+productionQuantity}</if>
+            <if test="tasknum != null "> and tasknum = #{tasknum}</if>
+        </where>
+    </select>
+    
+    <select id="selectDispatchByMcnum" parameterType="Long" resultMap="DispatchResult">
+        <include refid="selectDispatchVo"/>
+        where mcnum = #{mcnum}
+    </select>
+        
+    <insert id="insertDispatch" parameterType="Dispatch" useGeneratedKeys="true" keyProperty="mcnum">
+        insert into dispatch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wpronum != null">wpronum,</if>
+            <if test="
+productionQuantity != null">
+production_quantity,</if>
+            <if test="tasknum != null">tasknum,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wpronum != null">#{wpronum},</if>
+            <if test="
+productionQuantity != null">#{
+productionQuantity},</if>
+            <if test="tasknum != null">#{tasknum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDispatch" parameterType="Dispatch">
+        update dispatch
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wpronum != null">wpronum = #{wpronum},</if>
+            <if test="
+productionQuantity != null">
+production_quantity = #{
+productionQuantity},</if>
+            <if test="tasknum != null">tasknum = #{tasknum},</if>
+        </trim>
+        where mcnum = #{mcnum}
+    </update>
+
+    <delete id="deleteDispatchByMcnum" parameterType="Long">
+        delete from dispatch where mcnum = #{mcnum}
+    </delete>
+
+    <delete id="deleteDispatchByMcnums" parameterType="String">
+        delete from dispatch where mcnum in 
+        <foreach item="mcnum" collection="array" open="(" separator="," close=")">
+            #{mcnum}
+        </foreach>
+    </delete>
+</mapper>
