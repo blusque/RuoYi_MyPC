@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.purchase.mapper.PurchaseOrderMapper">
+    
+    <resultMap type="PurchaseOrder" id="PurchaseOrderResult">
+        <result property="id"    column="id"    />
+        <result property="start"    column="start"    />
+        <result property="end"    column="end"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="staffId"    column="staff_id"    />
+        <result property="purchaseOrderStatus"    column="purchase_order_status"    />
+    </resultMap>
+
+    <sql id="selectPurchaseOrderVo">
+        select id, start, end, supplier_id, staff_id, purchase_order_status from purchase_order
+    </sql>
+
+    <select id="selectPurchaseOrderList" parameterType="PurchaseOrder" resultMap="PurchaseOrderResult">
+        <include refid="selectPurchaseOrderVo"/>
+        <where>  
+            <if test="start != null "> and start = #{start}</if>
+            <if test="end != null "> and end = #{end}</if>
+            <if test="supplierId != null "> and supplier_id = #{supplierId}</if>
+            <if test="staffId != null "> and staff_id = #{staffId}</if>
+            <if test="purchaseOrderStatus != null  and purchaseOrderStatus != ''"> and purchase_order_status = #{purchaseOrderStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchaseOrderById" parameterType="Long" resultMap="PurchaseOrderResult">
+        <include refid="selectPurchaseOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPurchaseOrder" parameterType="PurchaseOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into purchase_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="start != null">start,</if>
+            <if test="end != null">end,</if>
+            <if test="supplierId != null">supplier_id,</if>
+            <if test="staffId != null">staff_id,</if>
+            <if test="purchaseOrderStatus != null and purchaseOrderStatus != ''">purchase_order_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="start != null">#{start},</if>
+            <if test="end != null">#{end},</if>
+            <if test="supplierId != null">#{supplierId},</if>
+            <if test="staffId != null">#{staffId},</if>
+            <if test="purchaseOrderStatus != null and purchaseOrderStatus != ''">#{purchaseOrderStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurchaseOrder" parameterType="PurchaseOrder">
+        update purchase_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="start != null">start = #{start},</if>
+            <if test="end != null">end = #{end},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="staffId != null">staff_id = #{staffId},</if>
+            <if test="purchaseOrderStatus != null and purchaseOrderStatus != ''">purchase_order_status = #{purchaseOrderStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePurchaseOrderById" parameterType="Long">
+        delete from purchase_order where id = #{id}
+    </delete>
+
+    <delete id="deletePurchaseOrderByIds" parameterType="String">
+        delete from purchase_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
