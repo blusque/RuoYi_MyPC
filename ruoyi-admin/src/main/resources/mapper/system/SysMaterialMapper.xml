@@ -28,6 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysMaterialVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectMaxSysMaterialId" resultMap="Long">
+        select max(id) from sys_bom
+    </select>
         
     <insert id="insertSysMaterial" parameterType="SysMaterial" useGeneratedKeys="true" keyProperty="id">
         insert into sys_bom

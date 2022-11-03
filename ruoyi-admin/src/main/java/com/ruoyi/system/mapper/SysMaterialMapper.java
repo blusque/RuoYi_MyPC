@@ -26,6 +26,8 @@ public interface SysMaterialMapper
      * @return 物料管理集合
      */
     public List<SysMaterial> selectSysMaterialList(SysMaterial sysMaterial);
+    
+    public Long selectMaxSysMaterialId();
 
     /**
      * 新增物料管理
