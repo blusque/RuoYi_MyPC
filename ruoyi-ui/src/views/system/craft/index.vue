@@ -203,6 +203,7 @@ export default {
     getList() {
       this.loading = true;
       listCraft(this.queryParams).then(response => {
+        console.log(response);
         this.craftList = this.handleTree(response.data, "materialId", "parentId");
         this.loading = false;
       });
