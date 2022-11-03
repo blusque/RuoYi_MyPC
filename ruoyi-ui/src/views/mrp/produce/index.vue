@@ -1,18 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="计划id" prop="mainProduceId">
+      <el-form-item label="生产日期" prop="mrpProduceDate">
+        <el-date-picker clearable
+          v-model="queryParams.mrpProduceDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择生产日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="生产产品名称编号" prop="mrpProduceNameid">
         <el-input
-          v-model="queryParams.mainProduceId"
-          placeholder="请输入计划id"
+          v-model="queryParams.mrpProduceNameid"
+          placeholder="请输入生产产品名称编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="计划时间" prop="mainProduceDate">
+      <el-form-item label="生产数量" prop="mrpProduceNumber">
         <el-input
-          v-model="queryParams.mainProduceDate"
-          placeholder="请输入计划时间"
+          v-model="queryParams.mrpProduceNumber"
+          placeholder="请输入生产数量"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -31,7 +39,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['mrp:produce:add']"
+          v-hasPermi="['produce:produce:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,7 +50,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['mrp:produce:edit']"
+          v-hasPermi="['produce:produce:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['mrp:produce:remove']"
+          v-hasPermi="['produce:produce:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +71,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['mrp:produce:export']"
+          v-hasPermi="['produce:produce:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -71,9 +79,14 @@
 
     <el-table v-loading="loading" :data="produceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="计划id" align="center" prop="mainProduceId" />
-      <el-table-column label="计划数量" align="center" prop="mainProduceNumber" />
-      <el-table-column label="计划时间" align="center" prop="mainProduceDate" />
+      <el-table-column label="生产编号" align="center" prop="mrpProduceId" />
+      <el-table-column label="生产日期" align="center" prop="mrpProduceDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.mrpProduceDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="生产产品名称编号" align="center" prop="mrpProduceNameid" />
+      <el-table-column label="生产数量" align="center" prop="mrpProduceNumber" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -81,14 +94,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['mrp:produce:edit']"
+            v-hasPermi="['produce:produce:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['mrp:produce:remove']"
+            v-hasPermi="['produce:produce:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -102,14 +115,22 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改主生产计划对话框 -->
+    <!-- 添加或修改生产对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="计划数量" prop="mainProduceNumber">
-          <el-input v-model="form.mainProduceNumber" placeholder="请输入计划数量" />
+        <el-form-item label="生产日期" prop="mrpProduceDate">
+          <el-date-picker clearable
+            v-model="form.mrpProduceDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择生产日期">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="计划时间" prop="mainProduceDate">
-          <el-input v-model="form.mainProduceDate" placeholder="请输入计划时间" />
+        <el-form-item label="生产产品名称编号" prop="mrpProduceNameid">
+          <el-input v-model="form.mrpProduceNameid" placeholder="请输入生产产品名称编号" />
+        </el-form-item>
+        <el-form-item label="生产数量" prop="mrpProduceNumber">
+          <el-input v-model="form.mrpProduceNumber" placeholder="请输入生产数量" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -139,7 +160,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 主生产计划表格数据
+      // 生产表格数据
       produceList: [],
       // 弹出层标题
       title: "",
@@ -149,18 +170,22 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        mainProduceId: null,
-        mainProduceDate: null
+        mrpProduceDate: null,
+        mrpProduceNameid: null,
+        mrpProduceNumber: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        mainProduceNumber: [
-          { required: true, message: "计划数量不能为空", trigger: "blur" }
+        mrpProduceDate: [
+          { required: true, message: "生产日期不能为空", trigger: "blur" }
         ],
-        mainProduceDate: [
-          { required: true, message: "计划时间不能为空", trigger: "blur" }
+        mrpProduceNameid: [
+          { required: true, message: "生产产品名称编号不能为空", trigger: "blur" }
+        ],
+        mrpProduceNumber: [
+          { required: true, message: "生产数量不能为空", trigger: "blur" }
         ]
       }
     };
@@ -169,7 +194,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询主生产计划列表 */
+    /** 查询生产列表 */
     getList() {
       this.loading = true;
       listProduce(this.queryParams).then(response => {
@@ -186,9 +211,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        mainProduceId: null,
-        mainProduceNumber: null,
-        mainProduceDate: null
+        mrpProduceId: null,
+        mrpProduceDate: null,
+        mrpProduceNameid: null,
+        mrpProduceNumber: null
       };
       this.resetForm("form");
     },
@@ -204,7 +230,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.mainProduceId)
+      this.ids = selection.map(item => item.mrpProduceId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -212,23 +238,23 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加主生产计划";
+      this.title = "添加生产";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const mainProduceId = row.mainProduceId || this.ids
-      getProduce(mainProduceId).then(response => {
+      const mrpProduceId = row.mrpProduceId || this.ids
+      getProduce(mrpProduceId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改主生产计划";
+        this.title = "修改生产";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.mainProduceId != null) {
+          if (this.form.mrpProduceId != null) {
             updateProduce(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -246,9 +272,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const mainProduceIds = row.mainProduceId || this.ids;
-      this.$modal.confirm('是否确认删除主生产计划编号为"' + mainProduceIds + '"的数据项？').then(function() {
-        return delProduce(mainProduceIds);
+      const mrpProduceIds = row.mrpProduceId || this.ids;
+      this.$modal.confirm('是否确认删除生产编号为"' + mrpProduceIds + '"的数据项？').then(function() {
+        return delProduce(mrpProduceIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -256,7 +282,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('mrp/produce/export', {
+      this.download('produce/produce/export', {
         ...this.queryParams
       }, `produce_${new Date().getTime()}.xlsx`)
     }
