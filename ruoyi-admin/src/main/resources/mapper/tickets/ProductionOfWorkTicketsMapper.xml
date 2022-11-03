@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sc.mapper.ProductionOfWorkTicketsMapper">
+    
+    <resultMap type="ProductionOfWorkTickets" id="ProductionOfWorkTicketsResult">
+        <result property="mcnum"    column="mcnum"    />
+        <result property="wcennunm"    column="wcennunm"    />
+        <result property="dateOfDemand"    column="date_of_demand"    />
+        <result property="dd"    column="dd"    />
+        <result property="ec"    column="ec"    />
+    </resultMap>
+
+    <sql id="selectProductionOfWorkTicketsVo">
+        select mcnum, wcennunm, date_of_demand, dd, ec from production_of_work_tickets
+    </sql>
+
+    <select id="selectProductionOfWorkTicketsList" parameterType="ProductionOfWorkTickets" resultMap="ProductionOfWorkTicketsResult">
+        <include refid="selectProductionOfWorkTicketsVo"/>
+        <where>  
+            <if test="wcennunm != null  and wcennunm != ''"> and wcennunm = #{wcennunm}</if>
+            <if test="dateOfDemand != null "> and date_of_demand = #{dateOfDemand}</if>
+            <if test="dd != null "> and dd = #{dd}</if>
+            <if test="ec != null  and ec != ''"> and ec = #{ec}</if>
+        </where>
+    </select>
+    
+    <select id="selectProductionOfWorkTicketsByMcnum" parameterType="Long" resultMap="ProductionOfWorkTicketsResult">
+        <include refid="selectProductionOfWorkTicketsVo"/>
+        where mcnum = #{mcnum}
+    </select>
+        
+    <insert id="insertProductionOfWorkTickets" parameterType="ProductionOfWorkTickets" useGeneratedKeys="true" keyProperty="mcnum">
+        insert into production_of_work_tickets
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wcennunm != null and wcennunm != ''">wcennunm,</if>
+            <if test="dateOfDemand != null">date_of_demand,</if>
+            <if test="dd != null">dd,</if>
+            <if test="ec != null and ec != ''">ec,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wcennunm != null and wcennunm != ''">#{wcennunm},</if>
+            <if test="dateOfDemand != null">#{dateOfDemand},</if>
+            <if test="dd != null">#{dd},</if>
+            <if test="ec != null and ec != ''">#{ec},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductionOfWorkTickets" parameterType="ProductionOfWorkTickets">
+        update production_of_work_tickets
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wcennunm != null and wcennunm != ''">wcennunm = #{wcennunm},</if>
+            <if test="dateOfDemand != null">date_of_demand = #{dateOfDemand},</if>
+            <if test="dd != null">dd = #{dd},</if>
+            <if test="ec != null and ec != ''">ec = #{ec},</if>
+        </trim>
+        where mcnum = #{mcnum}
+    </update>
+
+    <delete id="deleteProductionOfWorkTicketsByMcnum" parameterType="Long">
+        delete from production_of_work_tickets where mcnum = #{mcnum}
+    </delete>
+
+    <delete id="deleteProductionOfWorkTicketsByMcnums" parameterType="String">
+        delete from production_of_work_tickets where mcnum in 
+        <foreach item="mcnum" collection="array" open="(" separator="," close=")">
+            #{mcnum}
+        </foreach>
+    </delete>
+</mapper>
