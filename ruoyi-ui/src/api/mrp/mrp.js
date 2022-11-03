@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
-// 查询生产列表
+// 查询主生产计划列表
 export function listProduce(query) {
   return request({
-    url: '/produce/produce/list',
+    url: '/mrp/produce/list',
     method: 'get',
     params: query
   })
 }
 
-// 查询生产详细
-export function getProduce(mrpProduceId) {
+// 查询主生产计划详细
+export function getProduce(mainProduceId) {
   return request({
-    url: '/produce/produce/' + mrpProduceId,
+    url: '/mrp/produce/' + mainProduceId,
     method: 'get'
   })
 }
 
-// 新增生产
+// 新增主生产计划
 export function addProduce(data) {
   return request({
-    url: '/produce/produce',
+    url: '/mrp/produce',
     method: 'post',
     data: data
   })
 }
 
-// 修改生产
+// 修改主生产计划
 export function updateProduce(data) {
   return request({
-    url: '/produce/produce',
+    url: '/mrp/produce',
     method: 'put',
     data: data
   })
 }
 
-// 删除生产
-export function delProduce(mrpProduceId) {
+// 删除主生产计划
+export function delProduce(mainProduceId) {
   return request({
-    url: '/produce/produce/' + mrpProduceId,
+    url: '/mrp/produce/' + mainProduceId,
     method: 'delete'
   })
 }
